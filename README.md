@@ -11,3 +11,4 @@ next steps:
 
 - making the code better/scaleabe
 - adding inhibitory neurons
+- using numpy
