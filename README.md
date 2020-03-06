@@ -9,5 +9,5 @@ Current design:
 
 next steps:
 
-- making the code better/scalabe
+- making the code better/scaleabe
 - adding inhibitory neurons
