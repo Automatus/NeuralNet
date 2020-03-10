@@ -51,35 +51,54 @@ while True:
     print("Updating weigths")
     i=0 #index for output
     for item in outputs:
-        f_error = youtputs[i] - outputs[i]
-        j = -1 #index for layer of neurons
-        k = 0 #index for neuron in layer j
-        for neuron in neurons[j,]:
-            if neuron: #if neuron is firing/1/True
-                wo[i,k] = wo[i,k] + f_error * step
-                spll[k] = True
-            k=+1
-        j =-1
-        while j > -(hl): # while we are iterating neural layers
-            k = 0
+        if not 1 in neurons[-1,] and item:
+            s = -2
+            for layer in neurons:
+                stop = False
+                if not stop: 
+                    if 1 in neurons[s,]:
+                        stop = True
+                        t = 0
+                        for neuron in neurons[s,]:
+                            if neuron:
+                                w[s, ,t] = w[s, ,t] + step
+                            t = +1
+                s = -1
+        else:
+            f_error = youtputs[i] - outputs[i]
+            j = -1 #index for layer of neurons
+            k = 0 #index for neuron in layer j
             for neuron in neurons[j,]:
-                if neuron:
-                    z = 0
-                    for item in spll:
-                        if spll[z]:
-                            w[j,z,k] = w[j,z,k] + f_error * step
-                k =+1
-        x = 0
-        for innn in inputs:
-            if innn:
-                q = 0
-                for it in spll:
-                    if spll[q]:
-                        wi[q,x] = wi[q,x] + f_error * step
-                    q =+1
-            x =+1
+                if neuron: #if neuron is firing/1/True
+                    wo[i,k] = wo[i,k] + f_error * step
+                    spll[k] = True
+                k=+1
+            j =-1
+            while j > -(hl): # while we are iterating neural layers
+                k = 0
+                for neuron in neurons[j,]:
+                    if neuron:
+                        z = 0
+                        for item in spll:
+                            if spll[z]:
+                                w[j,z,k] = w[j,z,k] + f_error * step
+                    k =+1
+            x = 0
+            for innn in inputs:
+                if innn:
+                    q = 0
+                    for it in spll:
+                        if spll[q]:
+                            wi[q,x] = wi[q,x] + f_error * step
+                        q =+1
+                x =+1
         i=+1
-    #old:
-    
-        elif True:
-            #here code to search for firing neurons in layer2 and strengthen weights before and after it
+
+
+
+
+    print("Weights updated,  new weights:")
+    print(wi)
+    print(w)
+    print(wo)
+
