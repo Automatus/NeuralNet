@@ -1,6 +1,6 @@
 import numpy as np
 
-# this is not a neural network, this code is just to see the difference between using * and numpy dot
+# this is not a neural network, this code is just to see the difference between using * and numpy dot and ranges and dimensions
 
 a = np.zeros((2, 2))
 a[1] = 2
