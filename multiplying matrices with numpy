@@ -12,5 +12,6 @@ b[1] = 3
 b[0] = 1
 print("\nb =", b)
 
+print("\na[0, :] dot b =", a[0, :].dot(b))
 print("\na dot b =", a.dot(b))
 print("\na * b =", a*b)
