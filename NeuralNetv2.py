@@ -5,6 +5,8 @@
 
 import numpy as np
 
+print("NeuralNet v2 by Automatus")
+
 b = 0.5  # treshold/bias
 step = 0.1  # learning rate
 # inputs and hidden neurons and outputs and weights:
@@ -14,16 +16,14 @@ nl = int(input("number of neurons in each hidden layer"))
 outputval = int(input("number of outputs"))
 w = np.zeros((hl, nl, nl))
 wi = np.zeros((inputval, nl))
-wo = np.zeros((nl, outputval))
-inputs = np.zeros(inputval)
+wo = np.zeros((outputval, nl))
+inputs = np.zeros((1, inputval))
 neurons = np.zeros((hl, nl))
-outputs = np.zeros(outputval)
-youtputs = np.zeros(outputval)
+outputs = np.zeros((1, outputval))
+youtputs = np.zeros((1, outputval))
 spll = np.zeros(nl)  # spiking neurons in last layer that have a connection to the output that is being updated
 
 while True:
-    print("NeuralNet v2 by Automatus")
-
     # Giving the Input
     print("Please give input")
     i = 0
@@ -37,7 +37,7 @@ while True:
     i = -1  # = current layer
     while i <= hl + 1:
         if i == -1:
-            neurons[0, :] = (inputs * wi) > b
+            neurons[0, :] = (wi * inputs) > b
         if i == hl + 1:
             outputs = neurons[hl-1, :] * wo
         else:
