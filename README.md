@@ -13,3 +13,7 @@ v2:
 
 v3:
 - adding inhibitory neurons
+
+- to learn more on matrix multiplication and for a matrix calculator look on https://www.mathsisfun.com
+- and the free 40 page book from Andy Thomas could be useful: https://adventuresinmachinelearning.com/coding-deep-learning-revolution-sale/
+- on backpropagation (derivative): https://www.youtube.com/watch?v=Ilg3gGewQ5U&t=163s
