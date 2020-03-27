@@ -34,11 +34,11 @@ while True:
 
     # Calculating the output
     print("calculating answer")
-    i = -1  # = current layer
-    while i <= hl + 1:
-        if i == -1:
-            neurons[0, :] = (inputs[0, :].dot(wi)) > b
-        if i == hl + 1:
+    i = 0  # = current layer
+    while i <= hl:
+        if i == 0:
+            neurons[i, :] = (inputs.dot(wi)) > b
+        if i == hl - 1:
             outputs = neurons[hl-1, :].dot(wo)
         else:
             neurons[i, :] = (neurons[i-1, :].dot(w[i, :])) > b
