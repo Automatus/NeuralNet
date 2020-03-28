@@ -16,7 +16,7 @@ nl = int(input("number of neurons in each hidden layer"))
 outputval = int(input("number of outputs"))
 w = np.zeros((hl, nl, nl))
 wi = np.zeros((inputval, nl))
-wo = np.zeros((outputval, nl))
+wo = np.zeros((nl, outputval))
 inputs = np.zeros((1, inputval))
 neurons = np.zeros((hl, nl))
 outputs = np.zeros((1, outputval))
@@ -29,7 +29,7 @@ while True:
     i = 0
     for item in inputs[0, :]:
         inputs[0, i] = int(input("input for input " + str(i)))
-        i = +1
+        i += 1
     print("Inputs:", inputs)
 
     # Calculating the output
@@ -39,10 +39,10 @@ while True:
         if i == 0:
             neurons[i, :] = (inputs.dot(wi)) > b
         if i == hl - 1:
-            outputs = neurons[hl-1, :].dot(wo)
+            outputs = neurons[hl-1, :].reshape(1, nl).dot(wo)
         else:
-            neurons[i, :] = (neurons[i-1, :].dot(w[i, :])) > b
-        i = +1
+            neurons[i, :] = (neurons[i-1, :].dot(w[i-1, :])) > b
+        i += 1
     print("calculated answer:", outputs)
 
     # Getting y/desired output
@@ -50,7 +50,7 @@ while True:
     i = 0
     for item in youtputs[0, :]:
         youtputs[0, i] = input("desired output for input" + str(i))
-        i = +1
+        i += 1
 
     # learning with backpropagation without derivatives
     print("Updating weigths")
@@ -67,7 +67,7 @@ while True:
                         for neuron in neurons[s, :]:  # iterating through neurons
                             if neuron:  # if neuron is active
                                 w[s, :, t] = w[s, :, t] + step  # strenghten weights/connections
-                            t = +1
+                            t += 1
                 s = -1
         else:  # if active neurons in last layer are present
             f_error = youtputs[0, i] - outputs[0, i]  # calculate error
@@ -77,7 +77,7 @@ while True:
                 if neuron:  # if neuron is firing/1/True
                     wo[i, k] = wo[i, k] + f_error * step
                     spll[0, k] = True
-                k = +1
+                k += 1
             j = -1
             while j > -hl:  # while we are iterating neural layers
                 k = 0
@@ -87,7 +87,7 @@ while True:
                         for thing in spll[0, :]:
                             if spll[0, z]:
                                 w[j, z, k] = w[j, z, k] + f_error * step
-                    k = +1
+                    k += 1
             x = 0
             for innn in inputs[0, :]:
                 if innn:
@@ -95,9 +95,9 @@ while True:
                     for it in spll[0, :]:
                         if spll[0, q]:
                             wi[q, x] = wi[q, x] + f_error * step
-                        q = +1
-                x = +1
-        i = +1
+                        q += 1
+                x += 1
+        i += 1
 
     print("Weights updated,  new weights:")
     print(wi)
