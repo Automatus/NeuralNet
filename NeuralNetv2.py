@@ -14,7 +14,7 @@ inputval = int(input("number of inputs"))
 hl = int(input("number of hidden layers"))
 nl = int(input("number of neurons in each hidden layer"))
 outputval = int(input("number of outputs"))
-w = np.zeros((hl, nl, nl))
+w = np.zeros((hl-1, nl, nl))
 wi = np.zeros((inputval, nl))
 wo = np.zeros((nl, outputval))
 inputs = np.zeros((1, inputval))
@@ -35,7 +35,7 @@ while True:
     # Calculating the output
     print("calculating answer")
     i = 0  # = current layer
-    while i <= hl:
+    while i < hl:
         if i == 0:
             neurons[i, :] = (inputs.dot(wi)) > b
         if i == hl - 1:
@@ -55,18 +55,24 @@ while True:
     # learning with backpropagation without derivatives
     print("Updating weigths")
     i = 0  # index for output
-    for item in outputs[0, :]:  # iterating through outputs
-        if 1 not in neurons[-1, :] and item:  # if no active neurons in last layer
+    for item in youtputs[0, :]:  # iterating through outputs
+        if 1 not in neurons[-1, :] and item:  # if no active neurons in last layer and desired output is 1
             s = -2  # index for layer
-            for layer in neurons[:, 0]:  # iterating through layers
-                stop = False
+            stop = False
+            while s >= -hl-1:  # iterating through layers
                 if not stop:
-                    if 1 in neurons[s, :]:  # if active neuron present in layer s
+                    if s == -hl-1 and 1 in inputs:  # if all neurons are negative, but positive input:
+                        t = 0  # index for input
+                        for bla in inputs[0, :]:  # iterating through inputs
+                            if bla:  # if input is active
+                                wi[t, :] = w[t, :] + step  # strenghten weights/connections to neurons
+                            t += 1
+                    elif 1 in neurons[s, :]:  # if active neuron present in layer s
                         stop = True  # stop iterating through layers
                         t = 0  # index for neuron
                         for neuron in neurons[s, :]:  # iterating through neurons
                             if neuron:  # if neuron is active
-                                w[s, :, t] = w[s, :, t] + step  # strenghten weights/connections
+                                w[s+2, :, t] = w[s+2, :, t] + step  # strenghten weights/connections
                             t += 1
                 s = -1
         else:  # if active neurons in last layer are present
@@ -75,18 +81,18 @@ while True:
             k = 0  # index for neuron in layer j
             for neuron in neurons[j, :]:
                 if neuron:  # if neuron is firing/1/True
-                    wo[i, k] = wo[i, k] + f_error * step
+                    wo[i, k] = wo[i, k] + f_error[i] * step
                     spll[0, k] = True
                 k += 1
-            j = -1
-            while j > -hl:  # while we are iterating neural layers
+            while j >= -hl:  # while we are iterating neural layers
                 k = 0
                 for neuron in neurons[j, :]:
                     if neuron:
                         z = 0
                         for thing in spll[0, :]:
                             if spll[0, z]:
-                                w[j, z, k] = w[j, z, k] + f_error * step
+                                w[j, z, k] = w[j, z, k] + f_error[i] * step  # maybe it has to be w[j, k, z] !!!
+                            z += 1
                     k += 1
             x = 0
             for innn in inputs[0, :]:
@@ -94,7 +100,7 @@ while True:
                     q = 0
                     for it in spll[0, :]:
                         if spll[0, q]:
-                            wi[q, x] = wi[q, x] + f_error * step
+                            wi[q, x] = wi[q, x] + f_error[i] * step  # maybe it has to be wi[x, q] !!!
                         q += 1
                 x += 1
         i += 1
