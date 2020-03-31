@@ -65,7 +65,7 @@ while True:
                         t = 0  # index for input
                         for bla in inputs[0, :]:  # iterating through inputs
                             if bla:  # if input is active
-                                wi[t, :] = w[t, :] + step  # strenghten weights/connections to neurons
+                                wi[t, :] = wi[t, :] + step  # strenghten weights/connections to neurons
                             t += 1
                     elif 1 in neurons[s, :]:  # if active neuron present in layer s
                         stop = True  # stop iterating through layers
@@ -74,7 +74,7 @@ while True:
                             if neuron:  # if neuron is active
                                 w[s+2, :, t] = w[s+2, :, t] + step  # strenghten weights/connections
                             t += 1
-                s = -1
+                s += -1
         else:  # if active neurons in last layer are present
             f_error = youtputs[0, i] - outputs[0, i]  # calculate error
             j = -1  # index for layer of neurons
@@ -94,6 +94,7 @@ while True:
                                 w[j, z, k] = w[j, z, k] + f_error[i] * step  # maybe it has to be w[j, k, z] !!!
                             z += 1
                     k += 1
+                j += -1
             x = 0
             for innn in inputs[0, :]:
                 if innn:
