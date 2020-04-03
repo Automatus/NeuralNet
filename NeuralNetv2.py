@@ -8,7 +8,7 @@ import numpy as np
 print("NeuralNet v2 by Automatus")
 
 b = 0.5  # treshold/bias
-step = 0.1  # learning rate
+step = 0.3  # learning rate
 # inputs and hidden neurons and outputs and weights:
 inputval = int(input("number of inputs"))
 hl = int(input("number of hidden layers"))
@@ -35,13 +35,13 @@ while True:
     # Calculating the output
     print("calculating answer")
     i = 0  # = current layer
-    while i < hl:
-        if i == 0:
-            neurons[i, :] = (inputs.dot(wi)) > b
-        if i == hl - 1:
-            outputs = neurons[hl-1, :].reshape(1, nl).dot(wo)
-        else:
-            neurons[i, :] = (neurons[i-1, :].dot(w[i-1, :])) > b
+    while i <= hl:  # iterating through layers
+        if i == 0:  # if calculating firts layer
+            neurons[i, :] = (inputs.dot(wi)) > b  # dot product of inputs with weights for inputs and first layer, check if it is bigger then treshold, then set neuron as firing if true
+        elif i == hl:  # if calculating last layer
+            outputs = neurons[hl-1, :].reshape(1, nl).dot(wo)  # dot product of last neural layer with weigts for output and last layer
+        else:  # if not calculating last or first layer, but layers in between
+            neurons[i, :] = (neurons[i-1, :].dot(w[i-1, :])) > b  # dot product of current neural layer with weigths, check if it is bigger then treshold, then set neuron as firing if true
         i += 1
     print("calculated answer:", outputs)
 
