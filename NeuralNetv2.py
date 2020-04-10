@@ -73,7 +73,7 @@ while True:
                         t = 0  # index for neuron
                         for neuron in neurons[s, :]:  # iterating through neurons
                             if neuron:  # if neuron is active
-                                w[s+2, :, t] = w[s+2, :, t] + step  # strenghten weights/connections
+                                w[s+1, :, t] = w[s+1, :, t] + step  # strenghten weights/connections
                             t += 1
                 s += -1
         else:  # if active neurons in last layer are present
@@ -93,7 +93,7 @@ while True:
                         z = 0
                         for thing in spll[0, :]:  # iterating through remembered spiking neurons
                             if spll[0, z]:  # if neuron spiked
-                                w[j, z, k] = w[j, z, k] + f_error * step  # change weight strenght in proportion to error. maybe it has to be w[j, k, z] !!!
+                                w[j+1, z, k] = w[j+1, z, k] + f_error * step  # change weight strenght in proportion to error. maybe it has to be w[j, k, z] !!!
                             z += 1
                     k += 1
                 j += -1
