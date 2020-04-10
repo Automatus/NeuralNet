@@ -3,8 +3,10 @@
 # neurons are spiking neurons
 # learning algorithm compares desired output with actual output
 # using numpy arrays
+# learning step depends on number of neurons and is randomized to avoid perfect parallelisms
 
 import numpy as np
+import random
 
 print("NeuralNet v2 by Automatus")
 
@@ -66,14 +68,14 @@ while True:
                         t = 0  # index for input
                         for bla in inputs[0, :]:  # iterating through inputs
                             if bla:  # if input is active
-                                wi[t, :] = wi[t, :] + step  # strenghten weights/connections to neurons
+                                wi[t, :] = wi[t, :] + step*random.randint(80, 120)/100  # strenghten weights/connections to neurons
                             t += 1
                     elif 1 in neurons[s, :]:  # if active neuron present in layer s
                         stop = True  # stop iterating through layers
                         t = 0  # index for neuron
                         for neuron in neurons[s, :]:  # iterating through neurons
                             if neuron:  # if neuron is active
-                                w[s+1, :, t] = w[s+1, :, t] + step/number_of_neurons_in_layer  # strenghten weights/connections in proportion to number of neurons
+                                w[s+1, :, t] = w[s+1, :, t] + step/number_of_neurons_in_layer*random.randint(80, 120)/100  # strenghten weights/connections in proportion to number of neurons
                             t += 1
                 s += -1
         else:  # if active neurons in last layer are present
@@ -82,7 +84,7 @@ while True:
             k = 0  # index for neuron in layer j
             for neuron in neurons[j, :]:
                 if neuron:  # if neuron is firing/1/True
-                    wo[k, i] = wo[k, i] + f_error * step/number_of_neurons_in_layer  # change weight strenght in proportion to error and number of neurons
+                    wo[k, i] = wo[k, i] + f_error * step/number_of_neurons_in_layer*random.randint(80, 120)/100  # change weight strenght in proportion to error and number of neurons
                     spll[0, k] = True  # remember spiking neuron for next iterations
                 k += 1
             j = j - 1
@@ -93,7 +95,7 @@ while True:
                         z = 0
                         for thing in spll[0, :]:  # iterating through remembered spiking neurons
                             if spll[0, z]:  # if neuron spiked
-                                w[j+1, z, k] = w[j+1, z, k] + f_error * step/number_of_neurons_in_layer  # change weight strenght in proportion to error and number of neurons
+                                w[j+1, z, k] = w[j+1, z, k] + f_error * step/number_of_neurons_in_layer*random.randint(80, 120)/100  # change weight strenght in proportion to error and number of neurons
                             z += 1
                     k += 1
                 j += -1
@@ -103,7 +105,7 @@ while True:
                     q = 0
                     for it in spll[0, :]:  # iterating through remembered spiking neurons
                         if spll[0, q]:  # if neuron spiked
-                            wi[x, q] = wi[x, q] + f_error * step  # change weight strenght in proportion to error
+                            wi[x, q] = wi[x, q] + f_error * step*random.randint(80, 120)/100  # change weight strenght in proportion to error
                         q += 1
                 x += 1
         i += 1
