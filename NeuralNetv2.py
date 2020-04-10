@@ -68,14 +68,20 @@ while True:
                         t = 0  # index for input
                         for bla in inputs[0, :]:  # iterating through inputs
                             if bla:  # if input is active
-                                wi[t, :] = wi[t, :] + step*random.randint(80, 120)/100  # strenghten weights/connections to neurons
+                                r = 0
+                                for thing in wi[t, :]:
+                                    wi[t, r] = wi[t, r] + step*random.randint(80, 120)/100  # strenghten weights/connections to neurons
+                                    r += 1
                             t += 1
                     elif 1 in neurons[s, :]:  # if active neuron present in layer s
                         stop = True  # stop iterating through layers
                         t = 0  # index for neuron
                         for neuron in neurons[s, :]:  # iterating through neurons
                             if neuron:  # if neuron is active
-                                w[s+1, :, t] = w[s+1, :, t] + step/number_of_neurons_in_layer*random.randint(80, 120)/100  # strenghten weights/connections in proportion to number of neurons
+                                r = 0
+                                for thingy in w[s+1, :, t]:
+                                    w[s+1, r, t] = w[s+1, r, t] + step/number_of_neurons_in_layer*random.randint(80, 120)/100  # strenghten weights/connections in proportion to number of neurons
+                                    r += 1
                             t += 1
                 s += -1
         else:  # if active neurons in last layer are present
