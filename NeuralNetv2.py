@@ -73,7 +73,7 @@ while True:
                         t = 0  # index for neuron
                         for neuron in neurons[s, :]:  # iterating through neurons
                             if neuron:  # if neuron is active
-                                w[s+1, :, t] = w[s+1, :, t] + step  # strenghten weights/connections
+                                w[s+1, :, t] = w[s+1, :, t] + step/number_of_neurons_in_layer  # strenghten weights/connections in proportion to number of neurons
                             t += 1
                 s += -1
         else:  # if active neurons in last layer are present
@@ -82,7 +82,7 @@ while True:
             k = 0  # index for neuron in layer j
             for neuron in neurons[j, :]:
                 if neuron:  # if neuron is firing/1/True
-                    wo[k, i] = wo[k, i] + f_error * step  # change weight strenght in proportion to error
+                    wo[k, i] = wo[k, i] + f_error * step/number_of_neurons_in_layer  # change weight strenght in proportion to error and number of neurons
                     spll[0, k] = True  # remember spiking neuron for next iterations
                 k += 1
             j = j - 1
@@ -93,7 +93,7 @@ while True:
                         z = 0
                         for thing in spll[0, :]:  # iterating through remembered spiking neurons
                             if spll[0, z]:  # if neuron spiked
-                                w[j+1, z, k] = w[j+1, z, k] + f_error * step  # change weight strenght in proportion to error. maybe it has to be w[j, k, z] !!!
+                                w[j+1, z, k] = w[j+1, z, k] + f_error * step/number_of_neurons_in_layer  # change weight strenght in proportion to error and number of neurons
                             z += 1
                     k += 1
                 j += -1
@@ -103,7 +103,7 @@ while True:
                     q = 0
                     for it in spll[0, :]:  # iterating through remembered spiking neurons
                         if spll[0, q]:  # if neuron spiked
-                            wi[x, q] = wi[x, q] + f_error * step  # change weight strenght in proportion to error. maybe it has to be wi[x, q] !!!
+                            wi[x, q] = wi[x, q] + f_error * step  # change weight strenght in proportion to error
                         q += 1
                 x += 1
         i += 1
