@@ -12,7 +12,7 @@ v2:
 - using numpy
 
 v3:
-- adding inhibitory neurons
+- save and open neural networks
 
 learning:
 - to learn more about matrix multiplication and for a matrix calculator look at https://www.mathsisfun.com
