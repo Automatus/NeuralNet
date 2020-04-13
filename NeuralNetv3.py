@@ -7,6 +7,7 @@
 
 import numpy as np
 import random
+import os
 
 print("NeuralNet v3 by Automatus")
 
@@ -16,18 +17,14 @@ step = 0.3  # learning rate
 while True:
     # Showing available projects
     print("Choose your network:")
-    file = open("Networks", "r")
-    networks = file.readlines()
-    networkslist = []
-    x = 1
+    networkslist = os.listdir(os.path.join(os.getcwd(), "Nets"))  # Reading folder with saved neural nets
+    i = 1
     print("0. New Network")
-    for line in networks:
-        networkslist.append(line.strip())
-        print(str(x) + ". " + line.strip())
-        x += 1
-    file.close()
-    choice = int(input()) - 1
-    if choice == -1:
+    for net in networkslist:  # iterating trough files and printing them
+        print(str(i) + ". " + net)
+        i += 1
+    choice = int(input()) - 1  # asking to choose a file
+    if choice == -1:  # if new file: ask for all parameters
         ProjectChoice = input("Name of new network:\n")
         # inputs and hidden neurons and outputs and weights:
         number_of_inputs = int(input("number of inputs"))
@@ -43,11 +40,12 @@ while True:
         youtputs = np.zeros((1, number_of_outputs))  # desired outputs
         spll = np.zeros((1, number_of_neurons_in_layer))  # SPiking neurons in Last investigated Layer that have a connection to the output that is being updated
 
-        file = open("Networks", "a")
-        file.write(ProjectChoice + "\n")
+        file = open(os.listdir(os.path.join(os.getcwd(), "Nets", ProjectChoice)), "w")  # Creating new file
         file.close()
     else:
         ProjectChoice = networkslist[choice]
+        file = open(os.listdir(os.path.join(os.getcwd(), "Nets", ProjectChoice)), "r")  # Reading selected file
+        file.close()
 
     # Giving the Input
     print("Please give input")
@@ -82,11 +80,11 @@ while True:
     i = 0  # index for output
     for item in youtputs[0, :]:  # iterating through outputs
         if 1 not in neurons[-1, :] and item:  # if no active neurons in last layer and desired output is 1
-            s = -2  # index for layer
+            j = -2  # index for layer
             stop = False
-            while s >= -number_of_hidden_layers-1:  # iterating through layers
+            while j >= -number_of_hidden_layers-1:  # iterating through layers
                 if not stop:
-                    if s == -number_of_hidden_layers-1 and 1 in inputs:  # if all neurons are negative, but positive input:
+                    if j == -number_of_hidden_layers-1 and 1 in inputs:  # if all neurons are negative, but positive input:
                         t = 0  # index for input
                         for bla in inputs[0, :]:  # iterating through inputs
                             if bla:  # if input is active
@@ -95,17 +93,17 @@ while True:
                                     wi[t, r] = wi[t, r] + step*random.randint(80, 120)/100  # strenghten weights/connections to neurons
                                     r += 1
                             t += 1
-                    elif 1 in neurons[s, :]:  # if active neuron present in layer s
+                    elif 1 in neurons[j, :]:  # if active neuron present in layer s
                         stop = True  # stop iterating through layers
                         t = 0  # index for neuron
-                        for neuron in neurons[s, :]:  # iterating through neurons
+                        for neuron in neurons[j, :]:  # iterating through neurons
                             if neuron:  # if neuron is active
                                 r = 0
-                                for thingy in w[s+1, :, t]:
-                                    w[s+1, r, t] = w[s+1, r, t] + step/number_of_neurons_in_layer*random.randint(80, 120)/100  # strenghten weights/connections in proportion to number of neurons
+                                for thingy in w[j+1, :, t]:
+                                    w[j+1, r, t] = w[j+1, r, t] + step/number_of_neurons_in_layer*random.randint(80, 120)/100  # strenghten weights/connections in proportion to number of neurons
                                     r += 1
                             t += 1
-                s += -1
+                j += -1
         else:  # if active neurons in last layer are present
             f_error = youtputs[0, i] - outputs[0, i]  # calculate error
             j = -1  # index for layer of neurons
