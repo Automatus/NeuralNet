@@ -15,57 +15,62 @@ step = 0.3  # learning rate
 minrand = 500  # minimal number for randomization
 maxrand = 1500  # maximal number for randomization
 
+# Showing available projects
+print("Choose your network:")
+networkslist = os.listdir(os.path.join(os.getcwd(), "Nets"))  # Reading folder with saved neural nets
+i = 1
+print("0. New Network")
+for net in networkslist:  # iterating trough files and printing them
+    print(str(i) + ". " + net)
+    i += 1
+choice = int(input()) - 1  # asking to choose a file
+if choice == -1:  # if new file: ask for all parameters
+    ProjectChoice = input("Name of new network:\n")
+    # inputs and hidden neurons and outputs and weights:
+    number_of_inputs = int(input("number of inputs"))
+    number_of_hidden_layers = int(input("number of hidden layers"))
+    number_of_neurons_in_layer = int(input("number of neurons in each hidden layer"))
+    number_of_outputs = int(input("number of outputs"))
+    w = np.zeros((number_of_hidden_layers - 1, number_of_neurons_in_layer,
+                  number_of_neurons_in_layer))  # weights between neurons
+    wi = np.zeros((number_of_inputs, number_of_neurons_in_layer))  # weights between inputs and first layer
+    wo = np.zeros((number_of_neurons_in_layer, number_of_outputs))  # weights between last layer and outputs
+    inputs = np.zeros((1, number_of_inputs))
+    neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer))
+    outputs = np.zeros((1, number_of_outputs))
+    youtputs = np.zeros((1, number_of_outputs))  # desired outputs
+    spll = np.zeros((1,
+                     number_of_neurons_in_layer))  # SPiking neurons in Last investigated Layer that have a connection to the output that is being updated
+
+    variables = np.array(
+        [b, step, minrand, maxrand, number_of_inputs, number_of_hidden_layers, number_of_neurons_in_layer,
+         number_of_outputs])  # This array is only created to be able to save it easily
+    np.savez(os.path.join(os.getcwd(), "Nets", ProjectChoice), variables, wi, w, wo)
+else:  # if existing file:
+    ProjectChoice = networkslist[choice]
+    npzfile = np.load(os.path.join(os.getcwd(), "Nets", ProjectChoice))  # open file
+
+    # Reading file
+    b = int(npzfile["arr_0"][0])
+    step = int(npzfile["arr_0"][1])
+    minrand = int(npzfile["arr_0"][2])
+    maxrand = int(npzfile["arr_0"][3])
+    number_of_inputs = int(npzfile["arr_0"][4])
+    number_of_hidden_layers = int(npzfile["arr_0"][5])
+    number_of_neurons_in_layer = int(npzfile["arr_0"][6])
+    number_of_outputs = int(npzfile["arr_0"][7])
+    wi = npzfile["arr_1"]
+    w = npzfile["arr_2"]
+    wo = npzfile["arr_3"]
+
+    inputs = np.zeros((1, number_of_inputs))
+    neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer))
+    outputs = np.zeros((1, number_of_outputs))
+    youtputs = np.zeros((1, number_of_outputs))  # desired outputs
+    spll = np.zeros((1,
+                     number_of_neurons_in_layer))  # SPiking neurons in Last investigated Layer that have a connection to the output that is being updated
+
 while True:
-    # Showing available projects
-    print("Choose your network:")
-    networkslist = os.listdir(os.path.join(os.getcwd(), "Nets"))  # Reading folder with saved neural nets
-    i = 1
-    print("0. New Network")
-    for net in networkslist:  # iterating trough files and printing them
-        print(str(i) + ". " + net)
-        i += 1
-    choice = int(input()) - 1  # asking to choose a file
-    if choice == -1:  # if new file: ask for all parameters
-        ProjectChoice = input("Name of new network:\n")
-        # inputs and hidden neurons and outputs and weights:
-        number_of_inputs = int(input("number of inputs"))
-        number_of_hidden_layers = int(input("number of hidden layers"))
-        number_of_neurons_in_layer = int(input("number of neurons in each hidden layer"))
-        number_of_outputs = int(input("number of outputs"))
-        w = np.zeros((number_of_hidden_layers - 1, number_of_neurons_in_layer, number_of_neurons_in_layer))  # weights between neurons
-        wi = np.zeros((number_of_inputs, number_of_neurons_in_layer))  # weights between inputs and first layer
-        wo = np.zeros((number_of_neurons_in_layer, number_of_outputs))  # weights between last layer and outputs
-        inputs = np.zeros((1, number_of_inputs))
-        neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer))
-        outputs = np.zeros((1, number_of_outputs))
-        youtputs = np.zeros((1, number_of_outputs))  # desired outputs
-        spll = np.zeros((1, number_of_neurons_in_layer))  # SPiking neurons in Last investigated Layer that have a connection to the output that is being updated
-
-        variables = np.array([b, step, minrand, maxrand, number_of_inputs, number_of_hidden_layers, number_of_neurons_in_layer, number_of_outputs])  # This array is only created to be able to save it easily
-        np.savez(os.path.join(os.getcwd(), "Nets", ProjectChoice), variables, wi, w, wo)
-    else:  # if existing file:
-        ProjectChoice = networkslist[choice]
-        npzfile = np.load(os.path.join(os.getcwd(), "Nets", ProjectChoice))  # open file
-
-        # Reading file
-        b = npzfile["arr_0"][0]
-        step = npzfile["arr_0"][1]
-        minrand = npzfile["arr_0"][2]
-        maxrand = npzfile["arr_0"][3]
-        number_of_inputs = npzfile["arr_0"][4]
-        number_of_hidden_layers = npzfile["arr_0"][5]
-        number_of_neurons_in_layer = npzfile["arr_0"][6]
-        number_of_outputs = npzfile["arr_0"][7]
-        wi = npzfile["arr_1"]
-        w = npzfile["arr_2"]
-        wo = npzfile["arr_3"]
-        
-        inputs = np.zeros((1, number_of_inputs))
-        neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer))
-        outputs = np.zeros((1, number_of_outputs))
-        youtputs = np.zeros((1, number_of_outputs))  # desired outputs
-        spll = np.zeros((1, number_of_neurons_in_layer))  # SPiking neurons in Last investigated Layer that have a connection to the output that is being updated
-
     # Giving the Input
     print("Please give input")
     i = 0
