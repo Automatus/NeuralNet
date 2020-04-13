@@ -11,7 +11,7 @@ v2:
 - making the code better/scaleable
 - using numpy
 
-v3:
+v2.1:
 - save and open neural networks
 
 learning:
