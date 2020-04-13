@@ -31,30 +31,26 @@ if choice == -1:  # if new file: ask for all parameters
     number_of_hidden_layers = int(input("number of hidden layers"))
     number_of_neurons_in_layer = int(input("number of neurons in each hidden layer"))
     number_of_outputs = int(input("number of outputs"))
-    w = np.zeros((number_of_hidden_layers - 1, number_of_neurons_in_layer,
-                  number_of_neurons_in_layer))  # weights between neurons
+    w = np.zeros((number_of_hidden_layers - 1, number_of_neurons_in_layer, number_of_neurons_in_layer))  # weights between neurons
     wi = np.zeros((number_of_inputs, number_of_neurons_in_layer))  # weights between inputs and first layer
     wo = np.zeros((number_of_neurons_in_layer, number_of_outputs))  # weights between last layer and outputs
     inputs = np.zeros((1, number_of_inputs))
     neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer))
     outputs = np.zeros((1, number_of_outputs))
     youtputs = np.zeros((1, number_of_outputs))  # desired outputs
-    spll = np.zeros((1,
-                     number_of_neurons_in_layer))  # SPiking neurons in Last investigated Layer that have a connection to the output that is being updated
+    spll = np.zeros((1, number_of_neurons_in_layer))  # SPiking neurons in Last investigated Layer that have a connection to the output that is being updated
 
-    variables = np.array(
-        [b, step, minrand, maxrand, number_of_inputs, number_of_hidden_layers, number_of_neurons_in_layer,
-         number_of_outputs])  # This array is only created to be able to save it easily
+    variables = np.array([b, step, minrand, maxrand, number_of_inputs, number_of_hidden_layers, number_of_neurons_in_layer, number_of_outputs])  # This array is only created to be able to save it easily
     np.savez(os.path.join(os.getcwd(), "Nets", ProjectChoice), variables, wi, w, wo)
 else:  # if existing file:
     ProjectChoice = networkslist[choice]
     npzfile = np.load(os.path.join(os.getcwd(), "Nets", ProjectChoice))  # open file
 
     # Reading file
-    b = int(npzfile["arr_0"][0])
-    step = int(npzfile["arr_0"][1])
-    minrand = int(npzfile["arr_0"][2])
-    maxrand = int(npzfile["arr_0"][3])
+    b = npzfile["arr_0"][0]
+    step = npzfile["arr_0"][1]
+    minrand = npzfile["arr_0"][2]
+    maxrand = npzfile["arr_0"][3]
     number_of_inputs = int(npzfile["arr_0"][4])
     number_of_hidden_layers = int(npzfile["arr_0"][5])
     number_of_neurons_in_layer = int(npzfile["arr_0"][6])
@@ -67,10 +63,12 @@ else:  # if existing file:
     neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer))
     outputs = np.zeros((1, number_of_outputs))
     youtputs = np.zeros((1, number_of_outputs))  # desired outputs
-    spll = np.zeros((1,
-                     number_of_neurons_in_layer))  # SPiking neurons in Last investigated Layer that have a connection to the output that is being updated
+    spll = np.zeros((1, number_of_neurons_in_layer))  # SPiking neurons in Last investigated Layer that have a connection to the output that is being updated
 
-while True:
+    variables = np.array([b, step, minrand, maxrand, number_of_inputs, number_of_hidden_layers, number_of_neurons_in_layer, number_of_outputs])
+
+running = True
+while running:
     # Giving the Input
     print("Please give input")
     i = 0
@@ -160,7 +158,14 @@ while True:
                 x += 1
         i += 1
 
-    print("Weights updated,  new weights:")
-    print(wi)
-    print(w)
-    print(wo)
+    print("Weights updated\n")
+    print("Options:")
+    print("ENTER: proceed")
+    print("s:     save and quit")
+    print("q:     quit without saving")
+    save = input()
+    if save == "s":
+        np.savez(os.path.join(os.getcwd(), "Nets", ProjectChoice), variables, wi, w, wo)
+        running = False
+    if save == "q":
+        running = False
