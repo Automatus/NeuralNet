@@ -15,7 +15,7 @@ v2.1:
 - save and open neural networks
 - logging
 
-soon: v.3 : AI module
+v.3 : AI module
 
 learning:
 - to learn more about matrix multiplication and for a matrix calculator look at https://www.mathsisfun.com
