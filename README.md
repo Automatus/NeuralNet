@@ -13,7 +13,6 @@ v2:
 
 v2.1:
 - save and open neural networks
-- logging
 
 MODULE: AI module
 
