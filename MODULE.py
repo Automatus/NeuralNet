@@ -5,7 +5,6 @@
 import numpy as np
 import random
 import os
-import logging
 
 
 def new():  # Creating new neural network with command line
@@ -13,10 +12,10 @@ def new():  # Creating new neural network with command line
 
     project_choice = input("Name of new network:\n")
 
-    b = float(input("Treshold value / bias (for example 0.5)")
-    step = float(input("Step size for learning rate (for example 0.3)")
-    minrand = int(input("minimum number for randomization (for example 500)")
-    maxrand = int(input("maximum number for randomization (for example 1500)")
+    b = float(input("Treshold value / bias, for example 0.5"))
+    step = float(input("Step size for learning rate, for example 0.3"))
+    minrand = int(input("minimum number for randomization, for example 500"))
+    maxrand = int(input("maximum number for randomization, for example 1500"))
     number_of_inputs = int(input("number of inputs"))
     number_of_hidden_layers = int(input("number of hidden layers"))
     number_of_neurons_in_layer = int(input("number of neurons in each hidden layer"))
@@ -112,16 +111,16 @@ def userlearn(file):  # Teaching the neural network from command line, step by s
                 stop = False
                 while j >= -number_of_hidden_layers-1:  # iterating through layers
                     if not stop:
-                        if j == -number_of_hidden_layers-1 and 1 in inputs:  # if all neurons are negative, but positive input:
+                        if j == -number_of_hidden_layers-1 and any(e > 0 for e in inputs):  # if all neurons are negative, but positive input:
                             t = 0  # index for input
                             for bla in inputs[0, :]:  # iterating through inputs
-                                if bla:  # if input is active
+                                if bla > 0:  # if input is active
                                     r = 0
                                     for thing in wi[t, :]:
-                                        wi[t, r] = wi[t, r] + step*random.randint(minrand, maxrand)/1000  # strenghten weights/connections to neurons
+                                        wi[t, r] = wi[t, r] + step*bla*random.randint(minrand, maxrand)/1000  # strenghten weights/connections to neurons
                                         r += 1
                                 t += 1
-                        elif 1 in neurons[j, :]:  # if active neuron present in layer s
+                        elif 1 in neurons[j, :] and j is not -number_of_hidden_layers-1:  # if active neuron present in layer j
                             stop = True
                             t = 0  # index for neuron
                             for neuron in neurons[j, :]:  # iterating through neurons
@@ -155,11 +154,11 @@ def userlearn(file):  # Teaching the neural network from command line, step by s
                     j += -1
                 x = 0
                 for innn in inputs[0, :]:  # iterating through inputs
-                    if innn:  # if input is 1
+                    if innn > 0:  # if input is 1
                         q = 0
                         for it in spll[0, :]:  # iterating through remembered spiking neurons
                             if spll[0, q]:  # if neuron spiked
-                                wi[x, q] = wi[x, q] + f_error * step*random.randint(minrand, maxrand)/1000  # change weight strenght in proportion to error
+                                wi[x, q] = wi[x, q] + f_error * innn * step*random.randint(minrand, maxrand)/1000  # change weight strenght in proportion to error
                             q += 1
                     x += 1
             i += 1
@@ -171,7 +170,7 @@ def userlearn(file):  # Teaching the neural network from command line, step by s
     print("q:     quit without saving")
     save = input()
     if save == "s":
-        np.savez(file), variables, wi, w, wo)
+        np.savez(file, variables, wi, w, wo)
         running = False
     if save == "q":
         running = False
