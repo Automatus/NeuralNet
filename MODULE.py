@@ -1,4 +1,4 @@
-# NeuralNet v.3 by Automatus
+# NeuralNet v.3, MODULE by Automatus
 # neurons are spiking neurons
 # learning step depends on number of neurons and is randomized to avoid perfect parallelisms
 
@@ -172,9 +172,6 @@ def userlearn(file):  # Teaching the neural network from command line, step by s
     save = input()
     if save == "s":
         np.savez(file), variables, wi, w, wo)
-        running = False    
+        running = False
     if save == "q":
         running = False
-
-def autolearn(file, inputfile, outputfile):
-    # Teaching the neural network with multiple files at once
