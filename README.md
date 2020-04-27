@@ -1,8 +1,8 @@
 # NeuralNet
 Artificial Neural Network
 
-Use the MODULE file 
-Neuralnetv2, v2 and v2.1 are old versions
+Use the MODULE file.
+Neuralnetv1, v2 and v2.1 are old versions
 
 v1:
 - Neurons will only fire above treshold value (boolean output)
