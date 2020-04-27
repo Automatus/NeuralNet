@@ -4,7 +4,6 @@ import os
 
 print("NeuralNet by Automatus: Teaching Neural Network...")
 
-currentimage = cv2.VideoCapture(0)
 cv2.namedWindow("preview")
 
 youtputs = np.zeros((1, 1))
@@ -14,28 +13,33 @@ name = input("Name for data entry:")
 os.mkdir((os.path.join(os.getcwd(), "Data", name)))
 os.mkdir((os.path.join(os.getcwd(), "Data", name, "notinimg")))
 
+currentimage = cv2.VideoCapture(0)
+currentimage.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+succes, currentframelll = currentimage.read()
+
 for running in range(30):
     cv2.waitKey(1000)
-    print(running)
+
     if running == 0:
         input("Please make the object APPEAR in the next photos")
         youtputs[0, 0] = 1
     if running == 15:
         input("Please make NO(!) object appear in the next photos")
         youtputs[0, 0] = 0
+        succes, currentframelll = currentimage.read()
 
-    succes, currentframe = currentimage.read()
-    cv2.imshow("preview", currentframe)
-    currentframe = cv2.resize(currentframe, None, fx=0.1, fy=0.1, interpolation=cv2.INTER_LINEAR)
-    red = currentframe[:, :, 0]  # + currentframe[:, :, 1] + currentframe[:, :, 2]
+    succes, currentframelll = currentimage.read()
+    cv2.imshow("preview", currentframelll)
+    resizedd = cv2.resize(currentframelll, None, fx=0.1, fy=0.1, interpolation=cv2.INTER_LINEAR)
+    red = resizedd[:, :, 0]  # + currentframe[:, :, 1] + currentframe[:, :, 2]
     c = np.reshape(red, (1, 3072))
     inputs = c/255
 
     filename = name + str(running) + ".npz"
-
     if running < 15:
         np.savez((os.path.join(os.getcwd(), "Data", name, filename)), inputs, youtputs)
     else:
         np.savez((os.path.join(os.getcwd(), "Data", name, "notinimg", filename)), inputs, youtputs)
+    print(running)
 
 cv2.destroyAllWindows()
