@@ -7,7 +7,15 @@ print("NeuralNet by Automatus: Teaching Neural Network...")
 currentimage = cv2.VideoCapture(0)
 cv2.namedWindow("preview")
 
+youtputs = np.zeros((1, 1))
+
+name = input("Name for data entry:")
+
+os.mkdir((os.path.join(os.getcwd(), "Data", name)))
+os.mkdir((os.path.join(os.getcwd(), "Data", name, "notinimg")))
+
 for running in range(30):
+    cv2.waitKey(1000)
     print(running)
     if running == 0:
         input("Please make the object APPEAR in the next photos")
@@ -22,10 +30,12 @@ for running in range(30):
     red = currentframe[:, :, 0]  # + currentframe[:, :, 1] + currentframe[:, :, 2]
     c = np.reshape(red, (1, 3072))
     inputs = c/255
-    print(inputs)
 
+    filename = name + str(running) + ".npz"
 
-print("NeuralNet v3 by Automatus: Weights updated\n")
-np.savez((os.path.join(os.getcwd(), "Nets", "NNvision.npz")), variables, wi, w, wo)
-print("Net Saved")
+    if running < 15:
+        np.savez((os.path.join(os.getcwd(), "Data", name, filename)), inputs, youtputs)
+    else:
+        np.savez((os.path.join(os.getcwd(), "Data", name, "notinimg", filename)), inputs, youtputs)
+
 cv2.destroyAllWindows()
