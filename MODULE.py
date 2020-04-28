@@ -320,10 +320,11 @@ def autolearn(file, datafolder):
                     x += 1
             i += 1
         running += 1
-
+        
+    np.savez(file, variables, wi, w, wo)
     print("NeuralNet v3 by Automatus: Weights updated\n")
-    
-    
+
+
 def imgtodata():
     import cv2
 
@@ -358,13 +359,14 @@ def imgtodata():
         red = resizedd[:, :, 0]  # + currentframe[:, :, 1] + currentframe[:, :, 2]
         c = np.reshape(red, (1, 3072))
         inputs = c / 255
-
+        
         filename = name + str(running) + ".npz"
         np.savez((os.path.join(os.getcwd(), "Data", name, filename)), inputs, youtputs)
 
         print(running)
 
     cv2.destroyAllWindows()
+    print("array shape = ", inputs.shape)
 
 
 execute = True
@@ -376,7 +378,7 @@ while execute:
     print("1.       Calculate output for Network")
     print("2.       Manual teaching of Network")
     print("3.       Auto teaching of Network")
-    print("4.       Take photos with webcam to make training data")     
+    print("4.       Take photos with webcam to make training data")
     print("q.       Quit ")
 
     beslis = input()
