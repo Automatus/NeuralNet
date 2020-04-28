@@ -35,7 +35,7 @@ def new():  # Creating new neural network with command line
     np.savez(os.path.join(os.getcwd(), "Nets", project_choice), variables, wi, w, wo)
 
 
-def calc(file, inputarray):  # Calculate output for a given neural network and input np.array with format (1,x)
+def calc(file, inputarray):  # Calculate output np array for a given neural network and input np.array with format (1,x)
 
     print("NeuralNet version 3 by Automatus: Calculating answer...")
 
@@ -322,3 +322,41 @@ def autolearn(file, datafolder):
         running += 1
 
     print("NeuralNet v3 by Automatus: Weights updated\n")
+
+
+execute = True
+while execute:
+    print("NeuralNet v3 by Automatus: Module")
+    print("Choose a function. Options:")
+    print("ENTER.   Continue with current network and function")
+    print("0.       New Network")
+    print("1.       Calculate output for Network")
+    print("2.       Manual teaching of Network")
+    print("3.       Auto teaching of Network")
+    print("q.       Quit ")
+    
+    beslis = input()
+    
+    if beslis != "":
+        last = beslis
+        filechosen = True
+    else:
+        beslis = last
+        filechosen = False
+        
+    if beslis == "1" or beslis == "2" or beslis == "3":
+        if not filechosen:
+            thisfile = input("Give the filepath of the neural network")
+        
+    if beslis == "q":
+        execute = False
+    elif beslis == "0":
+        new()
+    elif beslis == "1":
+        answer = calc(thisfile)
+        print("answer = ", answer)
+    elif beslis == "2":
+        userlearn(thisfile)
+    elif beslis == "3":
+        thisdata = input("Give the filepath of the specific data folder")
+        autolearn(thisfile, thisdata)
