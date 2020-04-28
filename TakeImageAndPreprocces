@@ -11,7 +11,6 @@ youtputs = np.zeros((1, 1))
 name = input("Name for data entry:")
 
 os.mkdir((os.path.join(os.getcwd(), "Data", name)))
-os.mkdir((os.path.join(os.getcwd(), "Data", name, "notinimg")))
 
 currentimage = cv2.VideoCapture(0)
 currentimage.set(cv2.CAP_PROP_BUFFERSIZE, 1)
@@ -36,10 +35,8 @@ for running in range(30):
     inputs = c/255
 
     filename = name + str(running) + ".npz"
-    if running < 15:
-        np.savez((os.path.join(os.getcwd(), "Data", name, filename)), inputs, youtputs)
-    else:
-        np.savez((os.path.join(os.getcwd(), "Data", name, "notinimg", filename)), inputs, youtputs)
+    np.savez((os.path.join(os.getcwd(), "Data", name, filename)), inputs, youtputs)
+
     print(running)
 
 cv2.destroyAllWindows()
