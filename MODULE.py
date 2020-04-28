@@ -117,14 +117,11 @@ def userlearn(file):  # Teaching the neural network from command line, step by s
         i = 0  # = current layer
         while i <= number_of_hidden_layers:  # iterating through layers
             if i == 0:  # if calculating firts layer
-                neurons[i, :] = (inputs.dot(
-                    wi)) > b  # dot product of inputs with weights for inputs and first layer, checks if it is bigger then treshold, then sets neuron as firing if true
+                neurons[i, :] = (inputs.dot(wi)) > b  # dot product of inputs with weights for inputs and first layer, checks if it is bigger then treshold, then sets neuron as firing if true
             elif i == number_of_hidden_layers:  # if calculating last layer
-                outputs = neurons[number_of_hidden_layers - 1, :].reshape(1, number_of_neurons_in_layer).dot(
-                    wo)  # dot product of last neural layer with weigts for output
+                outputs = neurons[number_of_hidden_layers - 1, :].reshape(1, number_of_neurons_in_layer).dot(wo)  # dot product of last neural layer with weigts for output
             else:  # if not calculating last or first layer, but layers in between
-                neurons[i, :] = (neurons[i - 1, :].dot(w[i - 1,
-                                                       :])) > b  # dot product of current neural layer with weigths, checks if it is bigger then treshold, then sets neuron as firing if true
+                neurons[i, :] = (neurons[i - 1, :].dot(w[i - 1, :])) > b  # dot product of current neural layer with weigths, checks if it is bigger then treshold, then sets neuron as firing if true
             i += 1
         print("calculated answer:", outputs)
 
@@ -143,7 +140,7 @@ def userlearn(file):  # Teaching the neural network from command line, step by s
                 stop = False
                 while j >= -number_of_hidden_layers-1:  # iterating through layers
                     if not stop:
-                        if j == -number_of_hidden_layers-1 and any(e > 0 for e in inputs):  # if all neurons are negative, but positive input:
+                        if j == -number_of_hidden_layers-1 and np.any(e > 0 for e in inputs):  # if all neurons are negative, but positive input:
                             t = 0  # index for input
                             for bla in inputs[0, :]:  # iterating through inputs
                                 if bla > 0:  # if input is active
@@ -242,12 +239,13 @@ def autolearn(file, datafolder):
 
     running = 0
     while running < len(objectimgpaths):
-        npzdatafile = np.load(objectimgpaths[running])
+        npzdatafile = np.load(os.path.join(datafolder, objectimgpaths[running]))
         inputs = npzdatafile["arr_0"]
         youtputs = npzdatafile["arr_1"]
 
         # Calculating the output
         print("calculating answer")
+        print("desired answer:", youtputs)
         i = 0  # = current layer
         while i <= number_of_hidden_layers:  # iterating through layers
             if i == 0:  # if calculating firts layer
@@ -266,8 +264,7 @@ def autolearn(file, datafolder):
                 stop = False
                 while j >= -number_of_hidden_layers - 1:  # iterating through layers
                     if not stop:
-                        if j == -number_of_hidden_layers - 1 and any(
-                                e > 0 for e in inputs):  # if all neurons are negative, but positive input:
+                        if j == (-number_of_hidden_layers - 1) and np.any(e > 0 for e in inputs):  # if all neurons are negative, but positive input:
                             t = 0  # index for input
                             for bla in inputs[0, :]:  # iterating through inputs
                                 if bla > 0:  # if input is active
@@ -276,8 +273,7 @@ def autolearn(file, datafolder):
                                         wi[t, r] = wi[t, r] + step * bla * random.randint(minrand, maxrand) / 1000  # strenghten weights/connections to neurons
                                         r += 1
                                 t += 1
-                        elif 1 in neurons[j,
-                                  :] and j is not -number_of_hidden_layers - 1:  # if active neuron present in layer j
+                        elif 1 in neurons[j, :] and j is not -number_of_hidden_layers - 1:  # if active neuron present in layer j
                             stop = True
                             t = 0  # index for neuron
                             for neuron in neurons[j, :]:  # iterating through neurons
@@ -320,7 +316,7 @@ def autolearn(file, datafolder):
                     x += 1
             i += 1
         running += 1
-        
+
     np.savez(file, variables, wi, w, wo)
     print("NeuralNet v3 by Automatus: Weights updated\n")
 
@@ -328,7 +324,7 @@ def autolearn(file, datafolder):
 def imgtodata():
     import cv2
 
-    print("NeuralNet by Automatus: Teaching Neural Network...")
+    print("NeuralNet by Automatus: Making Data...")
 
     cv2.namedWindow("preview")
 
@@ -359,7 +355,7 @@ def imgtodata():
         red = resizedd[:, :, 0]  # + currentframe[:, :, 1] + currentframe[:, :, 2]
         c = np.reshape(red, (1, 3072))
         inputs = c / 255
-        
+
         filename = name + str(running) + ".npz"
         np.savez((os.path.join(os.getcwd(), "Data", name, filename)), inputs, youtputs)
 
@@ -370,6 +366,7 @@ def imgtodata():
 
 
 execute = True
+filechosen = False
 while execute:
     print("NeuralNet v3 by Automatus: Module")
     print("Choose a function. Options:")
@@ -385,19 +382,19 @@ while execute:
 
     if beslis != "":
         last = beslis
-        filechosen = True
+        filechosen = False
     else:
         beslis = last
-        filechosen = False
+        filechosen = True
 
     if beslis == "1" or beslis == "2" or beslis == "3":
         if not filechosen:
             netlist = os.listdir(os.path.join(os.getcwd(), "Nets"))
             i = 0
             for net in netlist:
-                print(i + ".        " + net)
+                print(str(i) + ".        " + net)
                 i += 1
-            netchoosen = input("Choose Network")
+            netchoosen = int(input("Choose Network"))
             thisfile = os.path.join(os.getcwd(), "Nets", netlist[netchoosen])
 
     if beslis == "q":
@@ -413,9 +410,10 @@ while execute:
         netlist = os.listdir(os.path.join(os.getcwd(), "Data"))
         i = 0
         for net in netlist:
-            print(i + ".        " + net)
+            print(str(i) + ".        " + net)
             i += 1
-        netchoosen = input("Choose Datafolder")
+        print("Choose Datafolder")
+        netchoosen = int(input())
         thisdata = os.path.join(os.getcwd(), "Data", netlist[netchoosen])
         autolearn(thisfile, thisdata)
     elif beslis == "4":
