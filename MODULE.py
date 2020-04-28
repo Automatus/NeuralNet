@@ -76,7 +76,7 @@ def calc(file, inputarray):  # Calculate output for a given neural network and i
 
 
 def userlearn(file):  # Teaching the neural network from command line, step by step
-    print("NeuralNet v3 by Automatus: Teaching Neural Network...")
+    print("NeuralNet v3 by Automatus: Manual Teaching Neural Network...")
 
     npzfile = np.load(file)  # open file
 
@@ -104,6 +104,38 @@ def userlearn(file):  # Teaching the neural network from command line, step by s
 
     running = True
     while running:
+        # Giving the Input
+        print("Please give input")
+        i = 0
+        for item in inputs[0, :]:
+            inputs[0, i] = int(input("input for input " + str(i)))
+            i += 1
+        print("Inputs:", inputs)
+
+        # Calculating the output
+        print("calculating answer")
+        i = 0  # = current layer
+        while i <= number_of_hidden_layers:  # iterating through layers
+            if i == 0:  # if calculating firts layer
+                neurons[i, :] = (inputs.dot(
+                    wi)) > b  # dot product of inputs with weights for inputs and first layer, checks if it is bigger then treshold, then sets neuron as firing if true
+            elif i == number_of_hidden_layers:  # if calculating last layer
+                outputs = neurons[number_of_hidden_layers - 1, :].reshape(1, number_of_neurons_in_layer).dot(
+                    wo)  # dot product of last neural layer with weigts for output
+            else:  # if not calculating last or first layer, but layers in between
+                neurons[i, :] = (neurons[i - 1, :].dot(w[i - 1,
+                                                       :])) > b  # dot product of current neural layer with weigths, checks if it is bigger then treshold, then sets neuron as firing if true
+            i += 1
+        print("calculated answer:", outputs)
+
+        # Getting y/desired output
+        print("Please give desired answers:")
+        i = 0
+        for item in youtputs[0, :]:
+            youtputs[0, i] = input("desired output for input" + str(i))
+            i += 1
+
+        # learning with backpropagation (without derivatives)
         i = 0  # index for output
         for item in youtputs[0, :]:  # iterating through outputs
             if 1 not in neurons[-1, :] and item:  # if no active neurons in last layer and desired output is 1
@@ -158,7 +190,7 @@ def userlearn(file):  # Teaching the neural network from command line, step by s
                         q = 0
                         for it in spll[0, :]:  # iterating through remembered spiking neurons
                             if spll[0, q]:  # if neuron spiked
-                                wi[x, q] = wi[x, q] + f_error * innn * step*random.randint(minrand, maxrand)/1000  # change weight strenght in proportion to error
+                                wi[x, q] = wi[x, q] + f_error * innn * step*random.randint(minrand, maxrand)/1000  # change weight strenght in proportion to error and input signal strength
                             q += 1
                     x += 1
             i += 1
@@ -174,3 +206,119 @@ def userlearn(file):  # Teaching the neural network from command line, step by s
         running = False
     if save == "q":
         running = False
+
+
+def autolearn(file, datafolder):
+    #  file = neural network file path
+    #  datafolder = directory path with .npz files with two arrays:
+    #  first array represents input in format (1, x)
+    #  second array represents desired output values in format (1, x)
+    print("NeuralNet v3 by Automatus: Auto Teaching Neural Network...")
+
+    npzfile = np.load(file)  # open file
+
+    # Reading file
+    b = npzfile["arr_0"][0]
+    step = npzfile["arr_0"][1]
+    minrand = npzfile["arr_0"][2]
+    maxrand = npzfile["arr_0"][3]
+    number_of_inputs = int(npzfile["arr_0"][4])
+    number_of_hidden_layers = int(npzfile["arr_0"][5])
+    number_of_neurons_in_layer = int(npzfile["arr_0"][6])
+    number_of_outputs = int(npzfile["arr_0"][7])
+    wi = npzfile["arr_1"]
+    w = npzfile["arr_2"]
+    wo = npzfile["arr_3"]
+
+    inputs = np.zeros((1, number_of_inputs))
+    neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer))
+    outputs = np.zeros((1, number_of_outputs))
+    youtputs = np.zeros((1, number_of_outputs))  # desired outputs
+    spll = np.zeros((1, number_of_neurons_in_layer))  # SPiking neurons in Last investigated Layer that have a connection to the output that is being updated
+
+    variables = np.array([b, step, minrand, maxrand, number_of_inputs, number_of_hidden_layers, number_of_neurons_in_layer, number_of_outputs])
+
+    objectimgpaths = [f for f in os.listdir(datafolder) if os.path.isfile(os.path.join(datafolder, f))]
+
+    running = 0
+    while running < len(objectimgpaths):
+        npzdatafile = np.load(objectimgpaths[running])
+        inputs = npzdatafile["arr_0"]
+        youtputs = npzdatafile["arr_1"]
+
+        # Calculating the output
+        print("calculating answer")
+        i = 0  # = current layer
+        while i <= number_of_hidden_layers:  # iterating through layers
+            if i == 0:  # if calculating firts layer
+                neurons[i, :] = (inputs.dot(wi)) > b  # dot product of inputs with weights for inputs and first layer, checks if it is bigger then treshold, then sets neuron as firing if true
+            elif i == number_of_hidden_layers:  # if calculating last layer
+                outputs = neurons[number_of_hidden_layers - 1, :].reshape(1, number_of_neurons_in_layer).dot(wo)  # dot product of last neural layer with weigts for output
+            else:  # if not calculating last or first layer, but layers in between
+                neurons[i, :] = (neurons[i - 1, :].dot(w[i - 1,:])) > b  # dot product of current neural layer with weigths, checks if it is bigger then treshold, then sets neuron as firing if true
+            i += 1
+        print("calculated answer:", outputs)
+
+        i = 0  # index for output
+        for item in youtputs[0, :]:  # iterating through outputs
+            if 1 not in neurons[-1, :] and item:  # if no active neurons in last layer and desired output is 1
+                j = -2  # index for layer
+                stop = False
+                while j >= -number_of_hidden_layers - 1:  # iterating through layers
+                    if not stop:
+                        if j == -number_of_hidden_layers - 1 and any(
+                                e > 0 for e in inputs):  # if all neurons are negative, but positive input:
+                            t = 0  # index for input
+                            for bla in inputs[0, :]:  # iterating through inputs
+                                if bla > 0:  # if input is active
+                                    r = 0
+                                    for thing in wi[t, :]:
+                                        wi[t, r] = wi[t, r] + step * bla * random.randint(minrand, maxrand) / 1000  # strenghten weights/connections to neurons
+                                        r += 1
+                                t += 1
+                        elif 1 in neurons[j,
+                                  :] and j is not -number_of_hidden_layers - 1:  # if active neuron present in layer j
+                            stop = True
+                            t = 0  # index for neuron
+                            for neuron in neurons[j, :]:  # iterating through neurons
+                                if neuron:  # if neuron is active
+                                    r = 0
+                                    for thingy in w[j + 1, :, t]:
+                                        w[j + 1, r, t] = w[j + 1, r, t] + step / number_of_neurons_in_layer * random.randint(minrand, maxrand) / 1000  # strenghten weights/connections in proportion to number of neurons
+                                        r += 1
+                                t += 1
+                    j += -1
+            else:  # if active neurons in last layer are present
+                f_error = youtputs[0, i] - outputs[0, i]  # calculate error
+                j = -1  # index for layer of neurons
+                k = 0  # index for neuron in layer j
+                for neuron in neurons[j, :]:
+                    if neuron:  # if neuron is firing
+                        wo[k, i] = wo[k, i] + f_error * step / number_of_neurons_in_layer * random.randint(minrand, maxrand) / 1000  # change weight strenght in proportion to error and number of neurons
+                        spll[0, k] = True  # remember spiking neuron for next iterations
+                    k += 1
+                j = j - 1
+                while j > -number_of_hidden_layers:  # while iterating through neural layers
+                    k = 0
+                    for neuron in neurons[j, :]:  # iterating through neurons in layer j
+                        if neuron:  # if neuron fired
+                            z = 0
+                            for thing in spll[0, :]:  # iterating through remembered spiking neurons
+                                if spll[0, z]:  # if neuron spiked
+                                    w[j + 1, z, k] = w[j + 1, z, k] + f_error * step / number_of_neurons_in_layer * random.randint(minrand, maxrand) / 1000  # change weight strenght in proportion to error and number of neurons
+                                z += 1
+                        k += 1
+                    j += -1
+                x = 0
+                for innn in inputs[0, :]:  # iterating through inputs
+                    if innn > 0:  # if input is 1
+                        q = 0
+                        for it in spll[0, :]:  # iterating through remembered spiking neurons
+                            if spll[0, q]:  # if neuron spiked
+                                wi[x, q] = wi[x, q] + f_error * innn * step * random.randint(minrand, maxrand) / 1000  # change weight strenght in proportion to error and input signal strength
+                            q += 1
+                    x += 1
+            i += 1
+        running += 1
+
+    print("NeuralNet v3 by Automatus: Weights updated\n")
