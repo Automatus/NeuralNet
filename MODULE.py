@@ -322,6 +322,49 @@ def autolearn(file, datafolder):
         running += 1
 
     print("NeuralNet v3 by Automatus: Weights updated\n")
+    
+    
+def imgtodata():
+    import cv2
+
+    print("NeuralNet by Automatus: Teaching Neural Network...")
+
+    cv2.namedWindow("preview")
+
+    youtputs = np.zeros((1, 1))
+
+    name = input("Name for data entry:")
+
+    os.mkdir((os.path.join(os.getcwd(), "Data", name)))
+
+    currentimage = cv2.VideoCapture(0)
+    currentimage.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+    succes, currentframelll = currentimage.read()
+
+    for running in range(30):
+        cv2.waitKey(1000)
+
+        if running == 0:
+            input("Please make the object APPEAR in the next photos")
+            youtputs[0, 0] = 1
+        if running == 15:
+            input("Please make NO(!) object appear in the next photos")
+            youtputs[0, 0] = 0
+            succes, currentframelll = currentimage.read()
+
+        succes, currentframelll = currentimage.read()
+        cv2.imshow("preview", currentframelll)
+        resizedd = cv2.resize(currentframelll, None, fx=0.1, fy=0.1, interpolation=cv2.INTER_LINEAR)
+        red = resizedd[:, :, 0]  # + currentframe[:, :, 1] + currentframe[:, :, 2]
+        c = np.reshape(red, (1, 3072))
+        inputs = c / 255
+
+        filename = name + str(running) + ".npz"
+        np.savez((os.path.join(os.getcwd(), "Data", name, filename)), inputs, youtputs)
+
+        print(running)
+
+    cv2.destroyAllWindows()
 
 
 execute = True
@@ -333,21 +376,28 @@ while execute:
     print("1.       Calculate output for Network")
     print("2.       Manual teaching of Network")
     print("3.       Auto teaching of Network")
+    print("4.       Take photos with webcam to make training data")     
     print("q.       Quit ")
-    
+
     beslis = input()
-    
+
     if beslis != "":
         last = beslis
         filechosen = True
     else:
         beslis = last
         filechosen = False
-        
+
     if beslis == "1" or beslis == "2" or beslis == "3":
         if not filechosen:
-            thisfile = input("Give the filepath of the neural network")
-        
+            netlist = os.listdir(os.path.join(os.getcwd(), "Nets"))
+            i = 0
+            for net in netlist:
+                print(i + ".        " + net)
+                i += 1
+            netchoosen = input("Choose Network")
+            thisfile = os.path.join(os.getcwd(), "Nets", netlist[netchoosen])
+
     if beslis == "q":
         execute = False
     elif beslis == "0":
@@ -358,5 +408,13 @@ while execute:
     elif beslis == "2":
         userlearn(thisfile)
     elif beslis == "3":
-        thisdata = input("Give the filepath of the specific data folder")
+        netlist = os.listdir(os.path.join(os.getcwd(), "Data"))
+        i = 0
+        for net in netlist:
+            print(i + ".        " + net)
+            i += 1
+        netchoosen = input("Choose Datafolder")
+        thisdata = os.path.join(os.getcwd(), "Data", netlist[netchoosen])
         autolearn(thisfile, thisdata)
+    elif beslis == "4":
+        imgtodata()
