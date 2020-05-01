@@ -111,6 +111,7 @@ def autolearn(file, datafolder):
     running = 0
     while running < len(objectimgpaths):
         npzdatafile = np.load(os.path.join(datafolder, objectimgpaths[running]))
+        print(objectimgpaths[running])
         inputs = npzdatafile["arr_0"]
         youtputs = npzdatafile["arr_1"]
 
@@ -162,6 +163,8 @@ def autolearn(file, datafolder):
                     j += -1
             elif not youtputs[0, i] == outputs[0, i]:  # if active neurons in last layer are present (and error  is not 0)
                 f_error = youtputs[0, i] - outputs[0, i]  # calculate error
+                if f_error < 0:
+                    f_error = f_error * 10  # without this it stays around 0.5 as output, it clears the way for new connections to be formed
                 j = -1  # index for layer of neurons
                 k = 0  # index for neuron in layer j
                 for neuron in neurons[j, :]:
@@ -276,7 +279,6 @@ while execute:
     print("2.       Reset Network")
     print("3.       Auto teaching of Network")
     print("4.       Take photos with webcam to make training data")
-    print("5.       Take photo with webcam and use as input to Calculate")
     print("q.       Quit ")
 
     beslis = input()
