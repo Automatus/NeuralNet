@@ -2,10 +2,10 @@
 Artificial Neural Network
 
 - Neurons will only fire above treshold value (boolean output)
-- bias for all neurons the same
 - learnig algorithm = backpropagation without differentiation 
 - using numpy
- save and open neural networks
+- save and open neural networks
+- train with webcam
 
 
 learning:
