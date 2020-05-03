@@ -3,10 +3,9 @@ Artificial Neural Network
 
 - Neurons will only fire above treshold value (boolean output)
 - learnig algorithm = backpropagation without differentiation, based on "neurons that fire together, wire together"
-- using numpy
 - create, save and open neural networks in terminal
 - train with webcam
-- the module can be used as standalone (terminal) application or as a library with functions to be used in other applications
+- the module can be used as a standalone (terminal) application or as a library with functions to be used in other applications
 
 
 learning:
