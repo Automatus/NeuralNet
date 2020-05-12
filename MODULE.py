@@ -12,7 +12,7 @@ def new():  # Creating new neural network with command line
     print("NeuralNet version 3 by Automatus: Creating new Neural Network...")
 
     if not os.path.exists(os.path.join(os.getcwd(), "Nets")):
-        os.makedir(os.path.join(os.getcwd(), "Nets"))
+        os.makedirs(os.path.join(os.getcwd(), "Nets"))
 
     project_choice = input("Name of new network:\n")
 
@@ -41,6 +41,7 @@ def new():  # Creating new neural network with command line
 
     np.savez(os.path.join(os.getcwd(), "Nets", project_choice), variables,
              wi, w, wo)
+    print("Neural Network generated and saved")
 
 
 def calc(file, inputarray):
@@ -256,6 +257,9 @@ def imgtodata():
 
     print("NeuralNet by Automatus: Making Data...")
 
+    if not os.path.exists(os.path.join(os.getcwd(), "Data")):
+        os.makedirs(os.path.join(os.getcwd(), "Data"))
+
     cv2.namedWindow("preview")
 
     youtputs = np.zeros((1, 1))
@@ -349,6 +353,9 @@ while execute:
 
     if beslis == "1" or beslis == "3" or beslis == "2":
         if not filechosen:
+            if not os.path.exists(os.path.join(os.getcwd(), "Nets")):
+                print("No neural Networks found, create one with option 0.")
+                continue
             netlist = os.listdir(os.path.join(os.getcwd(), "Nets"))
             i = 0
             for net in netlist:
@@ -362,6 +369,9 @@ while execute:
     elif beslis == "0":
         new()
     elif beslis == "1":
+        if not os.path.exists(os.path.join(os.getcwd(), "Data")):
+            print("No data to procces found, create data with option 4.")
+            continue
         netlist = os.listdir(os.path.join(os.getcwd(), "Data"))
         i = 0
         for net in netlist:
@@ -391,6 +401,9 @@ while execute:
         if yesno == "y":
             resetnet(thisfile)
     elif beslis == "3":
+        if not os.path.exists(os.path.join(os.getcwd(), "Data")):
+            print("No data to procces found, create data with option 4.")
+            continue
         netlist = os.listdir(os.path.join(os.getcwd(), "Data"))
         i = 0
         for net in netlist:
