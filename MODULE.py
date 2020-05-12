@@ -11,6 +11,9 @@ import os
 def new():  # Creating new neural network with command line
     print("NeuralNet version 3 by Automatus: Creating new Neural Network...")
 
+    if not os.path.exists(os.path.join(os.getcwd(), "Nets")):
+        os.makedir(os.path.join(os.getcwd(), "Nets"))
+
     project_choice = input("Name of new network:\n")
 
     b = float(input("Treshold value / bias, for example 0.5"))
