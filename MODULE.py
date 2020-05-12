@@ -332,7 +332,7 @@ def resetnet(file):
 execute = True
 filechosen = False
 while execute:
-    print("NeuralNet v3 by Automatus: Module")
+    print("\nNeuralNet v3 by Automatus: Module\n\n")
     print("Choose a function. Options:")
     print("ENTER.   Continue with current network and function")
     print("0.       New Network")
