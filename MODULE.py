@@ -20,6 +20,8 @@ def new():  # Creating new neural network with command line
     step = float(input("Step size for learning rate, for example 0.3"))
     minrand = int(input("minimum number for randomization, for example 500"))
     maxrand = int(input("maximum number for randomization, for example 1500"))
+    negative_error_scalar = float(input(
+        "scalar for negative error, for example 10"))
     number_of_inputs = int(input("number of inputs"))
     number_of_hidden_layers = int(input("number of hidden layers"))
     number_of_neurons_in_layer = int(input(
@@ -36,7 +38,7 @@ def new():  # Creating new neural network with command line
 
     variables = np.array([b, step, minrand, maxrand, number_of_inputs,
                           number_of_hidden_layers, number_of_neurons_in_layer,
-                          number_of_outputs])
+                          number_of_outputs, negative_error_scalar])
     # This array is only created to be able to save it easily
 
     np.savez(os.path.join(os.getcwd(), "Nets", project_choice), variables,
@@ -60,11 +62,8 @@ def calc(file, inputarray):
     w = npzfile["arr_2"]
     wo = npzfile["arr_3"]
 
-    # inputs is here: inputarray
     neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer))
     outputs = np.zeros((1, number_of_outputs))
-    # SPiking neurons in Last investigated Layer that have a connection
-    # to the output that is being updated
 
     i = 0  # = current layer
     while i <= number_of_hidden_layers:  # iterating through layers
@@ -100,6 +99,7 @@ def autolearn(file, datafolder):
     number_of_hidden_layers = int(npzfile["arr_0"][5])
     number_of_neurons_in_layer = int(npzfile["arr_0"][6])
     number_of_outputs = int(npzfile["arr_0"][7])
+    negative_error_scalar = npzfile["arr_0"][8]
     wi = npzfile["arr_1"]
     w = npzfile["arr_2"]
     wo = npzfile["arr_3"]
@@ -113,7 +113,7 @@ def autolearn(file, datafolder):
 
     variables = np.array([b, step, minrand, maxrand, number_of_inputs,
                           number_of_hidden_layers, number_of_neurons_in_layer,
-                          number_of_outputs])
+                          number_of_outputs, negative_error_scalar])
 
     objectimgpaths = [f for f in os.listdir(datafolder) if os.path.isfile(
         os.path.join(datafolder, f))]
@@ -200,9 +200,9 @@ def autolearn(file, datafolder):
                 # (and error  is not 0)
                 f_error = youtputs[0, i] - outputs[0, i]  # calculate error
                 if f_error < 0:
-                    f_error = f_error * 10  # without this it stays around
-                    #  0.5 as output, it clears the way for new connections
-                    #  to be formed
+                    f_error = f_error * negative_error_scalar
+                    # without this it stays around 0.5 as output,
+                    # this clears the way for new connections to be formed
                 j = -1  # index for layer of neurons
                 k = 0  # index for neuron in layer j
                 for neuron in neurons[j, :]:
@@ -314,12 +314,13 @@ def resetnet(file):
     number_of_hidden_layers = int(npzfile["arr_0"][5])
     number_of_neurons_in_layer = int(npzfile["arr_0"][6])
     number_of_outputs = int(npzfile["arr_0"][7])
+    negative_error_scalar = npzfile["arr_0"][8]
     wi = npzfile["arr_1"]
     w = npzfile["arr_2"]
     wo = npzfile["arr_3"]
     variables = np.array([b, step, minrand, maxrand, number_of_inputs,
                           number_of_hidden_layers, number_of_neurons_in_layer,
-                          number_of_outputs])
+                          number_of_outputs, negative_error_scalar])
     print("Resetting...")
     wi[:] = 0
     w[:] = 0
