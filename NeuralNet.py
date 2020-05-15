@@ -104,6 +104,28 @@ def autolearn(file, datafolder):
     w = npzfile["arr_2"]
     wo = npzfile["arr_3"]
 
+    print("Current learning variables:")
+    print("bias/treshold                  = " + str(b))
+    print("stepsize/learning rate         = " + str(step))
+    print("lower number for randomization = " + str(minrand))
+    print("upper number for randomization = " + str(maxrand))
+    print("scalar for negative error      = " + str(negative_error_scalar))
+
+    print("Do you want to change the learning variables of the network? y/n")
+    decide = input("(The new variables will be saved in the networks file)")
+    if decide == "y":
+        b = float(input(
+            "Treshold value / bias, for example 0.5"))
+        step = float(input(
+            "Step size for learning rate, for example 0.3"))
+        minrand = int(input(
+            "minimum number for randomization, for example 500"))
+        maxrand = int(input(
+            "maximum number for randomization, for example 1500"))
+        negative_error_scalar = float(input(
+            "scalar for negative error, for example 10"))
+        print("Variables Changed")
+
     neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer))
     outputs = np.zeros((1, number_of_outputs))
     spll = np.zeros((1, number_of_neurons_in_layer))
