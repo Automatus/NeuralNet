@@ -62,7 +62,8 @@ def calc(file, inputarray):
     w = npzfile["arr_2"]
     wo = npzfile["arr_3"]
 
-    neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer))
+    neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer),
+                       dtype=bool)
     outputs = np.zeros((1, number_of_outputs))
 
     i = 0  # = current layer
@@ -126,9 +127,10 @@ def autolearn(file, datafolder):
             "scalar for negative error, for example 10"))
         print("Variables Changed")
 
-    neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer))
+    neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer),
+                       dtype=bool)
     outputs = np.zeros((1, number_of_outputs))
-    spll = np.zeros((1, number_of_neurons_in_layer))
+    spll = np.zeros((1, number_of_neurons_in_layer), dtype=bool)
     # SPiking neurons in Last investigated Layer that have a
     # connection to the output that is being updated
     randomvalues = np.zeros((1, number_of_neurons_in_layer))
