@@ -1,14 +1,18 @@
-# NeuralNet v.3, MODULE by Automatus
-# neurons are spiking neurons
-# learning step depends on number of neurons and is randomized
-# to avoid perfect parallelisms
+"""
+NeuralNet v.3, MODULE by Automatus.
+
+neurons are spiking neurons.
+learning step depends on number of neurons and is randomized.
+to avoid perfect parallelisms.
+"""
 
 import numpy as np
 import random
 import os
 
 
-def new():  # Creating new neural network with command line
+def new():
+    """Create new neural network with command line."""
     print("NeuralNet version 3 by Automatus: Creating new Neural Network...")
 
     if not os.path.exists(os.path.join(os.getcwd(), "Nets")):
@@ -47,9 +51,10 @@ def new():  # Creating new neural network with command line
 
 
 def calc(file, inputarray):
-    # Calculate output np array for a given neural network
-    # and input np.array with format (1,x)
-
+    """
+    Calculate output np array for a given neural network
+    and input np.array with format (1,x)."
+    """
     print("NeuralNet version 3 by Automatus: Calculating answer...")
 
     npzfile = np.load(file)  # open file
@@ -83,10 +88,11 @@ def calc(file, inputarray):
 
 
 def autolearn(file, datafolder):
-    #  file = neural network file path
-    #  datafolder = directory path with .npz files with two arrays:
-    #  first array represents input in format (1, x)
-    #  second array represents desired output values in format (1, x)
+    """
+    File = neural network file path
+    first array represents input in format (1, x)
+    second array represents desired output values in format (1, x)
+    """
     print("NeuralNet v3 by Automatus: Auto Teaching Neural Network...")
 
     npzfile = np.load(file)  # open file
@@ -277,6 +283,7 @@ def autolearn(file, datafolder):
 
 
 def imgtodata():
+    """Create Data with webcam"""
     import cv2
 
     print("NeuralNet by Automatus: Making Data...")
@@ -327,6 +334,7 @@ def imgtodata():
 
 
 def resetnet(file):
+    """Reset network"""
     print("Loading file to reset...")
     npzfile = np.load(file)
 
