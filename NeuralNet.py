@@ -301,6 +301,7 @@ def imgtodata():
 
     currentimage = cv2.VideoCapture(0)
     currentimage.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+    # https://stackoverflow.com/questions/43665208/how-to-get-the-latest-frame-from-capture-device-camera-in-opencv-python
     succes, currentframelll = currentimage.read()
 
     for running in range(30):
