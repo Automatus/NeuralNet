@@ -292,6 +292,7 @@ def imgtodata():
         os.makedirs(os.path.join(os.getcwd(), "Data"))
 
     cv2.namedWindow("preview")
+    # probably got it from here: https://stackoverflow.com/questions/19285562/python-opencv-imread-displaying-image
 
     youtputs = np.zeros((1, 1))
 
@@ -300,6 +301,7 @@ def imgtodata():
     os.mkdir((os.path.join(os.getcwd(), "Data", name)))
 
     currentimage = cv2.VideoCapture(0)
+    # maybe got it from here: https://stackoverflow.com/questions/604749/how-do-i-access-my-webcam-in-python
     currentimage.set(cv2.CAP_PROP_BUFFERSIZE, 1)
     # https://stackoverflow.com/questions/43665208/how-to-get-the-latest-frame-from-capture-device-camera-in-opencv-python
     succes, currentframelll = currentimage.read()
@@ -317,6 +319,7 @@ def imgtodata():
 
         succes, currentframelll = currentimage.read()
         cv2.imshow("preview", currentframelll)
+        # probably got it from here: https://stackoverflow.com/questions/19285562/python-opencv-imread-displaying-image
         resizedd = cv2.resize(currentframelll, None, fx=0.1, fy=0.1,
                               interpolation=cv2.INTER_LINEAR)
         red = resizedd[:, :, 0]
