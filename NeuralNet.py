@@ -93,7 +93,31 @@ def autolearn(file, datafolder):
     first array represents input in format (1, x)
     second array represents desired output values in format (1, x)
     """
+    import matplotlib.pyplot as plt
+
+    def plotit(values):
+        fig, ax = plt.subplots()
+
+        fig.patch.set_alpha(0)
+        ax.patch.set_alpha(0)
+        # https://www.science-emergence.com/Articles/How-to-change-the-color-background-of-a-matplotlib-figure-/
+        ax.spines['bottom'].set_color('white')
+        ax.spines['top'].set_color('white')
+        ax.spines['right'].set_color('white')
+        ax.spines['left'].set_color('white')
+        ax.tick_params(axis='x', colors='yellow')
+        ax.tick_params(axis='y', colors='yellow')
+        # https://stackoverflow.com/questions/1982770/matplotlib-changing-the-color-of-an-axis#12059429
+        ax.set_xlabel("iterations", color="yellow")
+        ax.set_ylabel("error", color="yellow")
+        ax.set_title("Error for each try", color="yellow")
+
+        ax.plot(list(range(len(values))), values)
+        # list range: https://stackoverflow.com/questions/11480042/python-3-turn-range-to-a-list
+
     print("NeuralNet v3 by Automatus: Auto Teaching Neural Network...")
+
+    errorvalues = []
 
     npzfile = np.load(file)  # open file
 
@@ -179,6 +203,9 @@ def autolearn(file, datafolder):
         print("calculated answer:", outputs)
 
         #  learning algorithm
+        f_error = youtputs[0, i] - outputs[0, i]  # calculate error
+        errorvalues.append(f_error)
+        plotit(errorvalues)
         i = 0  # index for output
         for item in youtputs[0, :]:  # iterating through outputs
             if 1 not in neurons[-1, :] and item:
@@ -228,7 +255,6 @@ def autolearn(file, datafolder):
             elif not youtputs[0, i] == outputs[0, i]:
                 # if active neurons in last layer are present
                 # (and error  is not 0)
-                f_error = youtputs[0, i] - outputs[0, i]  # calculate error
                 if f_error < 0:
                     f_error = f_error * negative_error_scalar
                     # without this it stays around 0.5 as output,
