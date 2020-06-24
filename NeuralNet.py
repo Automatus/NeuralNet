@@ -24,29 +24,23 @@ def new():
     step = float(input("Step size for learning rate, for example 0.3"))
     minrand = int(input("minimum number for randomization, for example 500"))
     maxrand = int(input("maximum number for randomization, for example 1500"))
-    negative_error_scalar = float(input(
-        "scalar for negative error, for example 10"))
+    negative_error_scalar = float(input("scalar for negative error, for example 10"))
     number_of_inputs = int(input("number of inputs"))
     number_of_hidden_layers = int(input("number of hidden layers"))
-    number_of_neurons_in_layer = int(input(
-        "number of neurons in each hidden layer"))
+    number_of_neurons_in_layer = int(input("number of neurons in each hidden layer"))
     number_of_outputs = int(input("number of outputs"))
 
-    w = np.zeros((number_of_hidden_layers - 1,
-                  number_of_neurons_in_layer, number_of_neurons_in_layer))
+    w = np.zeros((number_of_hidden_layers - 1, number_of_neurons_in_layer, number_of_neurons_in_layer))
     # weights between neurons
     wi = np.zeros((number_of_inputs, number_of_neurons_in_layer))
     # weights between inputs and first layer
     wo = np.zeros((number_of_neurons_in_layer, number_of_outputs))
     # weights between last layer and outputs
 
-    variables = np.array([b, step, minrand, maxrand, number_of_inputs,
-                          number_of_hidden_layers, number_of_neurons_in_layer,
-                          number_of_outputs, negative_error_scalar])
+    variables = np.array([b, step, minrand, maxrand, number_of_inputs, number_of_hidden_layers, number_of_neurons_in_layer, number_of_outputs, negative_error_scalar])
     # This array is only created to be able to save it easily
 
-    np.savez(os.path.join(os.getcwd(), "Nets", project_choice), variables,
-             wi, w, wo)
+    np.savez(os.path.join(os.getcwd(), "Nets", project_choice), variables, wi, w, wo)
     print("Neural Network generated and saved")
 
 
@@ -67,8 +61,7 @@ def calc(file, inputarray):
     w = npzfile["arr_2"]
     wo = npzfile["arr_3"]
 
-    neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer),
-                       dtype=bool)
+    neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer), dtype=bool)
     outputs = np.zeros((1, number_of_outputs))
 
     i = 0  # = current layer
@@ -76,8 +69,7 @@ def calc(file, inputarray):
         if i == 0:  # if calculating firts layer
             neurons[i, :] = (inputarray.dot(wi)) > b
         elif i == number_of_hidden_layers:  # if calculating last layer
-            outputs = neurons[number_of_hidden_layers - 1, :].reshape(
-                1, number_of_neurons_in_layer).dot(wo)
+            outputs = neurons[number_of_hidden_layers - 1, :].reshape(1, number_of_neurons_in_layer).dot(wo)
             # dot product of last neural layer with weigts for output
         else:  # if calculating layers in between
             neurons[i, :] = (neurons[i - 1, :].dot(w[i - 1, :])) > b
@@ -160,27 +152,22 @@ def autolearn(file, datafolder):
             "scalar for negative error, for example 10"))
         print("Variables Changed")
 
-    neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer),
-                       dtype=bool)
+    neurons = np.zeros((number_of_hidden_layers, number_of_neurons_in_layer), dtype=bool)
     outputs = np.zeros((1, number_of_outputs))
     spll = np.zeros((1, number_of_neurons_in_layer), dtype=bool)
     # SPiking neurons in Last investigated Layer that have a
     # connection to the output that is being updated
     randomvalues = np.zeros((1, number_of_neurons_in_layer))
 
-    variables = np.array([b, step, minrand, maxrand, number_of_inputs,
-                          number_of_hidden_layers, number_of_neurons_in_layer,
-                          number_of_outputs, negative_error_scalar])
+    variables = np.array([b, step, minrand, maxrand, number_of_inputs, number_of_hidden_layers, number_of_neurons_in_layer, number_of_outputs, negative_error_scalar])
 
-    objectimgpaths = [f for f in os.listdir(datafolder) if os.path.isfile(
-        os.path.join(datafolder, f))]
+    objectimgpaths = [f for f in os.listdir(datafolder) if os.path.isfile(os.path.join(datafolder, f))]
 
     repeating = 0
     while repeating < repeat:
         running = 0
         while running < len(objectimgpaths):
-            npzdatafile = np.load(os.path.join(datafolder,
-                                               objectimgpaths[running]))
+            npzdatafile = np.load(os.path.join(datafolder, objectimgpaths[running]))
             print(objectimgpaths[running])
             inputs = npzdatafile["arr_0"]
             youtputs = npzdatafile["arr_1"]
@@ -196,8 +183,7 @@ def autolearn(file, datafolder):
                     # first layer, checks if it is bigger then treshold,
                     # then sets neuron as firing if true
                 elif i == number_of_hidden_layers:  # if calculating last layer
-                    outputs = neurons[number_of_hidden_layers - 1, :].reshape(
-                        1, number_of_neurons_in_layer).dot(wo)
+                    outputs = neurons[number_of_hidden_layers - 1, :].reshape(1, number_of_neurons_in_layer).dot(wo)
                     # dot product of last neural layer with weigts for output
                 else:  # if not calculating layers in between
                     neurons[i, :] = (neurons[i - 1, :].dot(w[i - 1, :])) > b
@@ -218,30 +204,25 @@ def autolearn(file, datafolder):
                     plo = 0
                     for randomvalue in randomvalues[0, :]:
                         #  setting random values
-                        randomvalues[0, plo] = random.randint(
-                            minrand, maxrand) / 1000
+                        randomvalues[0, plo] = random.randint( minrand, maxrand) / 1000
                         plo += 1
                     j = -2  # index for layer
                     stop = False
                     while j >= -number_of_hidden_layers - 1:
                         # iterating through layers
                         if not stop:
-                            if j == (-number_of_hidden_layers - 1) and np.any(
-                                    e > 0 for e in inputs):
+                            if j == (-number_of_hidden_layers - 1) and np.any(e > 0 for e in inputs):
                                 # if all neurons are negative, but positive input:
                                 t = 0  # index for input
                                 for bla in inputs[0, :]:  # iterating inputs
                                     if bla > 0:  # if input is active
                                         r = 0
                                         for thing in wi[t, :]:
-                                            wi[t, r] = (wi[t, r] + step /
-                                                        number_of_inputs * bla
-                                                        * randomvalues[0, r])
+                                            wi[t, r] = (wi[t, r] + step / number_of_inputs * bla * randomvalues[0, r])
                                             # strenghten weights to neurons
                                             r += 1
                                     t += 1
-                            elif 1 in neurons[j, :] and j is not (
-                                    -number_of_hidden_layers - 1):
+                            elif 1 in neurons[j, :] and j is not (-number_of_hidden_layers - 1):
                                 # if active neuron present in layer j
                                 stop = True
                                 t = 0  # index for neuron
@@ -249,9 +230,7 @@ def autolearn(file, datafolder):
                                     if neuron:  # if neuron is active
                                         r = 0
                                         for thingy in w[j + 1, :, t]:
-                                            w[j + 1, r, t] = w[j + 1, r, t] + (
-                                                step / number_of_neurons_in_layer *
-                                                randomvalues[0, r])
+                                            w[j + 1, r, t] = w[j + 1, r, t] + (step / number_of_neurons_in_layer * randomvalues[0, r])
                                             # strenghten weights in proportion to
                                             # number of neurons
                                             r += 1
@@ -268,8 +247,7 @@ def autolearn(file, datafolder):
                     k = 0  # index for neuron in layer j
                     for neuron in neurons[j, :]:
                         if neuron:  # if neuron is firing
-                            wo[k, i] = wo[k, i] + f_error * (
-                                step / number_of_neurons_in_layer)
+                            wo[k, i] = wo[k, i] + f_error * (step / number_of_neurons_in_layer)
                             # change weight strenght in proportion to
                             # error and number of neurons
                             spll[0, k] = True
@@ -286,9 +264,7 @@ def autolearn(file, datafolder):
                                 for thing in spll[0, :]:
                                     # iterating through remembered spiking neurons
                                     if spll[0, z]:  # if neuron spiked
-                                        w[j + 1, z, k] = w[j + 1, z, k] + (
-                                            f_error * step /
-                                            number_of_neurons_in_layer)
+                                        w[j + 1, z, k] = w[j + 1, z, k] + (f_error * step / number_of_neurons_in_layer)
                                         # change weight strenght in proportion to
                                         # error and number of neurons
                                     z += 1
@@ -361,8 +337,7 @@ def imgtodata():
         inputs = inputs > 0.4
         # https://stackoverflow.com/questions/36719997/threshold-in-2d-numpy-array#36720130
         filename = name + str(running) + ".npz"
-        np.savez((os.path.join(os.getcwd(), "Data", name, filename)),
-                 inputs, youtputs)
+        np.savez((os.path.join(os.getcwd(), "Data", name, filename)), inputs, youtputs)
 
         print(running)
 
@@ -387,9 +362,7 @@ def resetnet(file):
     wi = npzfile["arr_1"]
     w = npzfile["arr_2"]
     wo = npzfile["arr_3"]
-    variables = np.array([b, step, minrand, maxrand, number_of_inputs,
-                          number_of_hidden_layers, number_of_neurons_in_layer,
-                          number_of_outputs, negative_error_scalar])
+    variables = np.array([b, step, minrand, maxrand, number_of_inputs, number_of_hidden_layers, number_of_neurons_in_layer, number_of_outputs, negative_error_scalar])
     print("Resetting...")
     wi[:] = 0
     w[:] = 0
