@@ -358,7 +358,8 @@ def imgtodata():
         # + currentframe[:, :, 1] + currentframe[:, :, 2]
         c = np.reshape(red, (1, 3072))
         inputs = c / 255
-
+        inputs = inputs > 0.4
+        # https://stackoverflow.com/questions/36719997/threshold-in-2d-numpy-array#36720130
         filename = name + str(running) + ".npz"
         np.savez((os.path.join(os.getcwd(), "Data", name, filename)),
                  inputs, youtputs)
