@@ -1,8 +1,8 @@
 # NeuralNet
 Artificial Neural Network
 
-- Neurons will only fire above treshold value (boolean output)
-- learnig algorithm = backpropagation without differentiation, with ideas from the Hebbian Theory
+- Neurons will only fire when > treshold value (boolean output, binary neurons)
+- learnig algorithm = backpropagation without differentiation, based on the Hebbian Theory
 - create, save and open neural networks in terminal
 - train with webcam
 - the module can be used as a standalone (terminal) application or as a library with functions to be used in other applications
