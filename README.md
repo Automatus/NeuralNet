@@ -13,3 +13,6 @@ learning:
 - the free 40 page book from Andy Thomas could be useful: https://adventuresinmachinelearning.com/coding-deep-learning-revolution-sale/
 - on backpropagation (derivative): https://www.youtube.com/watch?v=Ilg3gGewQ5U&t=163s
 - on logging: https://www.youtube.com/watch?v=jxmzY9soFXg and https://inventwithpython.com/blog/2012/04/06/stop-using-print-for-debugging-a-5-minute-quickstart-guide-to-pythons-logging-module/
+
+Make numpy faster:
+http://roman-kh.github.io/numpy-multicore/
