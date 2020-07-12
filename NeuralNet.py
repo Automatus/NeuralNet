@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 """
 NeuralNet v.3, MODULE by Automatus.
 
@@ -9,6 +12,7 @@ to avoid perfect parallelisms.
 import numpy as np
 import random
 import os
+from gtts import gTTS
 
 
 def new():
@@ -288,6 +292,9 @@ def autolearn(file, datafolder):
 
     np.savez(file, variables, wi, w, wo)
     print("NeuralNet v3 by Automatus: Weights updated\n")
+    tts = gTTS(text='Neural Networks weights updated and saved', lang='en')
+    tts.save("status.wav")
+    os.system("mpg321 status.wav")
 
 
 def imgtodata():
@@ -372,6 +379,9 @@ def resetnet(file):
     print("File resetted and saved")
 
 
+tts = gTTS(text='Welcome to NeuralNet by Automatus', lang='en')
+tts.save("status.wav")
+os.system("mpg321 status.wav")
 execute = True
 filechosen = False
 while execute:
