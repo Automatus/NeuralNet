@@ -402,15 +402,15 @@ def mnist():
 
     for running in range(len(train_labels)):
         inputs = train_images[running, :, :].reshape((1, 28*28))
-        youtputs = 0
+        youtputs[:] = 0
         youtputs[0, (train_labels[running])] = 1
         filename = name + str(running) + ".npz"
         np.savez((os.path.join(os.getcwd(), "Data", name, filename)), inputs, youtputs)
     print("training data converted and saved...")
 
-    for running in range(len(train_labels)):
+    for running in range(len(test_labels)):
         inputs = test_images[running, :, :].reshape((1, 28*28))
-        youtputs = 0
+        youtputs[:] = 0
         youtputs[0, (test_labels[running])] = 1
         filename = nametest + str(running) + ".npz"
         np.savez((os.path.join(os.getcwd(), "Data", nametest, filename)), inputs, youtputs)
@@ -431,7 +431,7 @@ while execute:
     print("1.       Calculate output with Network")
     print("2.       Reset Network")
     print("3.       Auto teaching of Network")
-    print("4.       Take photos with webcam to make training data")
+    print("4.       Take photos with webcam to make training/test data")
     print("5.       Make data from MNIST data")
     print("q.       Quit ")
 
