@@ -85,6 +85,8 @@ def calc(file, inputarray):
 
 def autolearn(file, datafolder):
     """
+    Execute Learning Algorithm.
+
     File = neural network file path
     first array represents input in format (1, x)
     second array represents desired output values in format (1, x)
@@ -353,7 +355,7 @@ def imgtodata():
 
 
 def resetnet(file):
-    """Reset network"""
+    """Reset network."""
     print("Loading file to reset...")
     npzfile = np.load(file)
 
@@ -379,9 +381,46 @@ def resetnet(file):
     print("File resetted and saved")
 
 
+def mnist():
+    """Convert MNIST keras numpy arrays to usable data for NeuralNet."""
+    print("NeuralNet by Automatus: Making MNIST Data...")
+
+    from keras.datasets import mnist
+    (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+
+    if not os.path.exists(os.path.join(os.getcwd(), "Data")):
+        os.makedirs(os.path.join(os.getcwd(), "Data"))
+
+    youtputs = np.zeros((1, 10))
+    inputs = np.zeros((1, 28 * 28))
+
+    name = input("Name for data entry:")
+    nametest = input("Name for TEST data entry:")
+
+    os.mkdir((os.path.join(os.getcwd(), "Data", name)))
+    os.mkdir((os.path.join(os.getcwd(), "Data", nametest)))
+
+    for running in range(len(train_labels)):
+        inputs = train_images[running, :, :].reshape((1, 28*28))
+        youtputs = 0
+        youtputs[0, (train_labels[running])] = 1
+        filename = name + str(running) + ".npz"
+        np.savez((os.path.join(os.getcwd(), "Data", name, filename)), inputs, youtputs)
+    print("training data converted and saved...")
+
+    for running in range(len(train_labels)):
+        inputs = test_images[running, :, :].reshape((1, 28*28))
+        youtputs = 0
+        youtputs[0, (test_labels[running])] = 1
+        filename = nametest + str(running) + ".npz"
+        np.savez((os.path.join(os.getcwd(), "Data", nametest, filename)), inputs, youtputs)
+    print("test data converted and saved.")
+
+
 tts = gTTS(text='Welcome to NeuralNet by Automatus', lang='en')
-tts.save("status.wav")
-os.system("mpg321 status.wav")
+tts.save("status.mp3")
+os.system("mpg321 status.mp3")
+# to eliminate delayed playback look at:https://askubuntu.com/questions/218444/sound-output-starts-delayed?newreg=de54ca755d054ccb98a6c7a4a0f84c5d
 execute = True
 filechosen = False
 while execute:
@@ -393,6 +432,7 @@ while execute:
     print("2.       Reset Network")
     print("3.       Auto teaching of Network")
     print("4.       Take photos with webcam to make training data")
+    print("5.       Make data from MNIST data")
     print("q.       Quit ")
 
     beslis = input()
@@ -468,3 +508,5 @@ while execute:
         autolearn(thisfile, thisdata)
     elif beslis == "4":
         imgtodata()
+    elif beslis == "5":
+        mnist()
