@@ -180,7 +180,7 @@ def autolearn(file, datafolder):
 
             # Calculating the output
             print("calculating answer")
-            print("desired answer:", youtputs)
+            print("desired answer:   ", youtputs)
             i = 0  # = current layer
             while i <= number_of_hidden_layers:  # iterating through layers
                 if i == 0:  # if calculating firts layer
@@ -201,16 +201,16 @@ def autolearn(file, datafolder):
 
             #  learning algorithm
             i = 0  # index for output
-            f_error = youtputs[0, i] - outputs[0, i]  # calculate error
-            errorvalues.append(f_error)
-            plotit(errorvalues)
             for item in youtputs[0, :]:  # iterating through outputs
+                f_error = youtputs[0, i] - outputs[0, i]  # calculate error
+#                errorvalues.append(f_error)
+#                plotit(errorvalues)
                 if 1 not in neurons[-1, :] and item:
                     # if no active neurons in last layer and desired output is 1
                     plo = 0
                     for randomvalue in randomvalues[0, :]:
                         #  setting random values
-                        randomvalues[0, plo] = random.randint( minrand, maxrand) / 1000
+                        randomvalues[0, plo] = random.randint(minrand, maxrand) / 1000
                         plo += 1
                     j = -2  # index for layer
                     stop = False
