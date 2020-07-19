@@ -180,7 +180,7 @@ def autolearn(file, datafolder):
 
             # Calculating the output
             print("calculating answer")
-            print("desired answer:   ", youtputs)
+            print("desired answer:   ", (youtputs > 0.5)*1)
             i = 0  # = current layer
             while i <= number_of_hidden_layers:  # iterating through layers
                 if i == 0:  # if calculating firts layer
@@ -197,7 +197,8 @@ def autolearn(file, datafolder):
                     # if it is bigger then treshold, then sets neuron
                     # as firing if true
                 i += 1
-            print("calculated answer:", outputs)
+            print("final answer:     ", (outputs > 0.5)*1)
+#            print("calculated answer:", outputs)
 
             #  learning algorithm
             i = 0  # index for output
