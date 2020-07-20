@@ -1,5 +1,5 @@
 # NeuralNet
-Artificial Neural Network
+Experimental Artificial Neural Network based on non-derivative learning algorithm
 
 - Neurons will only fire when > treshold value (boolean output, binary neurons)
 - self made learnig algorithm based on the Hebbian Theory
