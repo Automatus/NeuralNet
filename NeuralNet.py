@@ -198,7 +198,7 @@ def autolearn(file, datafolder):
                     # as firing if true
                 i += 1
             print("final answer:     ", (outputs > 0.5)*1)
-#            print("calculated answer:", outputs)
+            print("calculated answer:", outputs)
 
             #  learning algorithm
             i = 0  # index for output
@@ -301,7 +301,7 @@ def autolearn(file, datafolder):
 
 
 def imgtodata():
-    """Create Data with webcam"""
+    """Create Data with webcam."""
     import cv2
 
     print("NeuralNet by Automatus: Making Data...")
@@ -373,10 +373,11 @@ def resetnet(file):
     w = npzfile["arr_2"]
     wo = npzfile["arr_3"]
     variables = np.array([b, step, minrand, maxrand, number_of_inputs, number_of_hidden_layers, number_of_neurons_in_layer, number_of_outputs, negative_error_scalar])
+    value = input("New value (for example 0):")
     print("Resetting...")
-    wi[:] = 0
-    w[:] = 0
-    wo[:] = 0
+    wi[:] = float(value)
+    w[:] = float(value)
+    wo[:] = float(value)
     print("saving...")
     np.savez(file, variables, wi, w, wo)
     print("File resetted and saved")
