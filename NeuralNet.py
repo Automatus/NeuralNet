@@ -404,6 +404,7 @@ def mnist():
 
     for running in range(len(train_labels)):
         inputs = train_images[running, :, :].reshape((1, 28*28))
+        inputs = inputs/255
         youtputs[:] = 0
         youtputs[0, (train_labels[running])] = 1
         filename = name + str(running) + ".npz"
@@ -412,6 +413,7 @@ def mnist():
 
     for running in range(len(test_labels)):
         inputs = test_images[running, :, :].reshape((1, 28*28))
+        inputs = inputs/255
         youtputs[:] = 0
         youtputs[0, (test_labels[running])] = 1
         filename = nametest + str(running) + ".npz"
